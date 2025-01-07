@@ -13,6 +13,11 @@ export default {
     extend: {
       container: {
         padding: "18px",
+        center: true,
+        screens: {
+          lg: "1024px",
+          xl: "1024px",
+        }
       }
     },
   },

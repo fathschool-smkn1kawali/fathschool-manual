@@ -6,10 +6,8 @@ const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <QueryClientProvider client={new QueryClient()}>
       <NextUIProvider>
-        <div className="container">
-          {children}
-        </div>
-        <Toaster/>
+        {children}
+        <Toaster position="top-right" />
       </NextUIProvider>
     </QueryClientProvider>
   );
