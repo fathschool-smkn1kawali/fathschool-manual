@@ -18,9 +18,11 @@ export default {
           lg: "1024px",
           xl: "1024px",
         }
-      }
+      },
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [
+    nextui({}),
+  ],
 } satisfies Config;

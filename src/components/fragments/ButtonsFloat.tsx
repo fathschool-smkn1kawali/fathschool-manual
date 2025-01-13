@@ -11,7 +11,7 @@ export const ButtonsFloat = () => {
     <div className="fixed bottom-2 right-2 sm:bottom-8 sm:right-8 z-50">
       <div className="flex flex-col gap-2 sm:gap-4">
         <Tooltip content="Theme" placement="left">
-          <Button isIconOnly onClick={toggleTheme}>
+          <Button isIconOnly onPress={toggleTheme}>
             {isTheme ? <Icons.Sun /> : <Icons.Moon />}
           </Button>
         </Tooltip>

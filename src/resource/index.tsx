@@ -1,16 +1,22 @@
 import ImageSchool from "/public/bg.jpeg";
-import Logo from "/public/Logo.png";
+import SmknKawali from "/public/Logo.png";
+import FathSchoolLight from "/public/FathSchool Light.png";
+import FathSchoolDark from "/public/FathSchool Dark.png";
 
 export const Images = {
   ImageSchool,
-  Logo,
+  SmknKawali,
+  FathSchoolLight,
+  FathSchoolDark
 };
 
 
-import { RiLockPasswordLine, RiCustomerService2Line } from "react-icons/ri";
-import { MdOutlineEmail, MdOutlineRemoveRedEye } from "react-icons/md";
-import { HiOutlineEyeOff } from "react-icons/hi";
+import { RiLockPasswordLine, RiCustomerService2Line, RiUser3Line } from "react-icons/ri";
+import { MdOutlineNotifications, MdLogout, MdOutlineEmail, MdOutlineRemoveRedEye } from "react-icons/md";
+import { HiOutlineEyeOff  } from "react-icons/hi";
 import { LuMoonStar, LuSun } from "react-icons/lu";
+import { IoSettingsOutline } from "react-icons/io5"
+import { TbCalendarClock } from "react-icons/tb";
 
 type IconProps = {
   size?: number;
@@ -18,26 +24,43 @@ type IconProps = {
   color?: string;
 };
 
+const IconSize = 20
+
 export const Icons = {
-  Email: ({ size = 20, className = "", color }: IconProps) => (
+  Email: ({ size = IconSize, className = "", color }: IconProps) => (
     <MdOutlineEmail size={size} className={className} color={color} />
   ),
-  Password: ({ size = 20, className = "", color }: IconProps) => (
+  Password: ({ size = IconSize, className = "", color }: IconProps) => (
     <RiLockPasswordLine size={size} className={className} color={color} />
   ),
-  ShowEye: ({ size = 20, className = "", color }: IconProps) => (
+  ShowEye: ({ size = IconSize, className = "", color }: IconProps) => (
     <MdOutlineRemoveRedEye size={size} className={className} color={color} />
   ),
-  EyeOff: ({ size = 20, className = "", color }: IconProps) => (
+  EyeOff: ({ size = IconSize, className = "", color }: IconProps) => (
     <HiOutlineEyeOff size={size} className={className} color={color} />
   ),
-  Moon: ({ size = 20, className = "", color }: IconProps) => (
+  Moon: ({ size = IconSize, className = "", color }: IconProps) => (
     <LuMoonStar size={size} className={className} color={color} />
   ),
-  Sun: ({ size = 20, className = "", color }: IconProps) => (
+  Sun: ({ size = IconSize, className = "", color }: IconProps) => (
     <LuSun size={size} className={className} color={color} />
   ),
-  Customer: ({ size = 20, className = "", color }: IconProps) => (
+  Customer: ({ size = IconSize, className = "", color }: IconProps) => (
     <RiCustomerService2Line size={size} className={className} color={color} />
+  ), 
+  User: ({ size = IconSize, className = "", color }: IconProps) => (
+    <RiUser3Line size={size} className={className} color={color} />
+  ),
+  Logout: ({ size = IconSize, className = "", color }: IconProps) => (
+    <MdLogout size={size} className={className} color={color} />
+  ),
+  Settings: ({ size = IconSize, className = "", color }: IconProps) => (
+    <IoSettingsOutline size={size} className={className} color={color} />
+  ),
+  Notification: ({ size = IconSize, className = "", color }: IconProps) => (
+    <MdOutlineNotifications size={size} className={className} color={color} />
+  ),
+  CalendarClock : ({ size = IconSize, className = "", color }: IconProps) => (
+    <TbCalendarClock size={size} className={className} color={color} />
   ),
 };

@@ -1,6 +1,6 @@
 import { useGeolocation } from "./useGeolocation";
 
-export default function CheckGPS() {
+export function CheckGPS() {
   const { location, error, isLoading, getLocation } = useGeolocation();
 
   return (

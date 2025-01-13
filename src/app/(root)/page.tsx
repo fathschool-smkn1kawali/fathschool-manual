@@ -1,19 +1,17 @@
 import { LoginForm } from "@/components/fragments/form/LoginForm";
-import { Images } from "@/resource";
-import { Image } from "@nextui-org/react";
 
-export default function LoginPage() {
+/**
+ * * A login page component.
+ *
+ * This component renders a login form
+ * The login form is a component that accepts an email and password.
+ *
+ * @returns A JSX element representing the login page.
+ */
+export default function Login(): React.ReactElement {
   return (
     <section>
-
-      {/* Content */}
-      <div className="block pt-16 sm:pt-24 lg:flex justify-center gap-8 xl:gap-12">
-        <LoginForm />
-        <div className="w-full hidden lg:flex items-center justify-center cursor-pointer">
-          <Image isZoomed alt="Image" src={Images.ImageSchool.src} width={500} height={400} />
-        </div>
-      </div>
-
+      <LoginForm />
     </section>
   );
 }
