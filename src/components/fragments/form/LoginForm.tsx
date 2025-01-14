@@ -5,26 +5,20 @@ import { Button, Input, Image } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLogin } from "@/lib/hooks/useLogin";
-import { toast } from "sonner";
 import { useState } from "react";
 import { Icons, Images } from "@/resource";
 import { HeadlineForm } from "./HeadlineForm";
 
 export const LoginForm: React.FC = () => {
-  const { isLoading } = useLogin();
+  const { status, mutate } = useLogin();
   const [isVisible, setIsVisible] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TypeLoginSchema>({
+  const { register, handleSubmit, formState: { errors }} = useForm<TypeLoginSchema>({
     resolver: zodResolver(loginSchema),
     mode: "all",
   });
 
   const onSubmit: SubmitHandler<TypeLoginSchema> = (data: TypeLoginSchema) => {
-    toast.success("Login success");
-    console.log(data);
+    mutate(data);
   };
 
   return (
@@ -38,9 +32,10 @@ export const LoginForm: React.FC = () => {
             <Input
               labelPlacement="outside"
               label="Email Address"
-              placeholder="Enter your email"
+              placeholder="Masukan email Anda"
               type="email"
               variant="bordered"
+              defaultValue="4085_std@fathforce.com"
               isInvalid={!!errors.email}
               errorMessage={errors.email?.message}
               {...register("email")}
@@ -53,9 +48,10 @@ export const LoginForm: React.FC = () => {
               }
               labelPlacement="outside"
               label="Password"
-              placeholder="Enter your password"
+              placeholder="Masukan password Anda"
               type={isVisible ? "text" : "password"}
               variant="bordered"
+              defaultValue="12345678"
               isInvalid={!!errors.password}
               errorMessage={errors.password?.message}
               {...register("password")}
@@ -64,9 +60,8 @@ export const LoginForm: React.FC = () => {
               className="w-full font-semibold"
               color="primary"
               type="submit"
-              isLoading={isLoading}
-              spinner
-              disabled={isLoading}
+              isLoading={status === "loading"}
+              disabled={status === "loading"}
             >
               Log In
             </Button>

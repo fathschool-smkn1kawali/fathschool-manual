@@ -29,7 +29,7 @@ export const NavBar: React.FC = (): JSX.Element => {
           ))}
         </NavbarItem>
         <NavbarItem>
-          <Button endContent={<Icons.Logout/>} color="danger" href="#" variant="flat">
+          <Button endContent={<Icons.Logout/>} as={"a"}  color="danger" href="/" variant="flat">
             Logout
           </Button>
         </NavbarItem>
