@@ -21,7 +21,7 @@ export const Buttons = () => {
   const url = `https://api.whatsapp.com/send?phone=${data?.data.data?.app_phone ?? "6281321828144"}&text=Hallo%20Admin` 
 
   return (
-    <div className="flex justify-end gap-2 sm:gap-4">
+    <div className="flex justify-end gap-2 sm:gap-4 relative z-50">
       
       <Tooltip content="Theme" placement="bottom">
         <Button isIconOnly onPress={toggleTheme} variant="bordered">
@@ -30,10 +30,8 @@ export const Buttons = () => {
       </Tooltip>
 
       <Tooltip content="Hubungi Customer" placement="bottom">
-        <Button isIconOnly variant="bordered">
-          <Link href={url} target="_blank">
-            <Icons.Customer />
-          </Link>
+        <Button isIconOnly as={Link} href={url} target="_blank" variant="bordered">
+          <Icons.Customer />
         </Button>
       </Tooltip>
     </div>
