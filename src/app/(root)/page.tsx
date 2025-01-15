@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
 import { LoginForm } from "@/components/fragments/form/LoginForm";
 import { useEffect, useState } from "react";
+import { Buttons } from "@/components/fragments/Buttons";
 
 /**
  * * A login page component.
@@ -15,18 +16,27 @@ export default function Login(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // LocalStorage ada atau tidak "isLogin"
+    const timer = setTimeout(() => {
+      const userData = localStorage.getItem("user");
+      const isLoggedIn = !!userData;
 
-    setInterval(() => {
+      if (isLoggedIn) {
+        window.location.href = "/dashboard/attendance";
+        return;
+      }
+
       setLoading(false);
-    }, 1000);
+    }, 700);
+
+    return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return <p>Loader...</p>;
-  }
+  if (loading) return <div className="min-h-[600px] flex items-center justify-center">Loading...</div>
+
   return (
     <section>
+      <Buttons />
+
       <LoginForm />
     </section>
   );

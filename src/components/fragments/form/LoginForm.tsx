@@ -9,6 +9,11 @@ import { useState } from "react";
 import { Icons, Images } from "@/resource";
 import { HeadlineForm } from "./HeadlineForm";
 
+/**
+ * * LoginForm component that provides a user interface for logging in.
+ *
+ * @returns {React.ReactElement} The JSX element representing the login form.
+ */
 export const LoginForm: React.FC = () => {
   const { status, mutate } = useLogin();
   const [isVisible, setIsVisible] = useState(false);
@@ -24,7 +29,7 @@ export const LoginForm: React.FC = () => {
   return (
     <div className="block pt-16 sm:pt-24 lg:flex justify-center gap-8 xl:gap-12">
       {/* Form */}
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="flex h-full w-full py-8 items-center justify-center">
         <div className="flex w-full max-w-sm flex-col gap-4">
           <HeadlineForm />
 
@@ -35,7 +40,7 @@ export const LoginForm: React.FC = () => {
               placeholder="Masukan email Anda"
               type="email"
               variant="bordered"
-              defaultValue="4085_std@fathforce.com"
+              // defaultValue="4085_std@fathforce.com"
               isInvalid={!!errors.email}
               errorMessage={errors.email?.message}
               {...register("email")}
@@ -51,7 +56,7 @@ export const LoginForm: React.FC = () => {
               placeholder="Masukan password Anda"
               type={isVisible ? "text" : "password"}
               variant="bordered"
-              defaultValue="12345678"
+              // defaultValue="12345678"
               isInvalid={!!errors.password}
               errorMessage={errors.password?.message}
               {...register("password")}

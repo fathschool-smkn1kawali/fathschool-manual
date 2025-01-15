@@ -2,6 +2,11 @@ import { Images } from "@/resource";
 import { JSX } from "react";
 import Image from "next/image";
 
+/**
+ * * A React component that renders a headline with a logo of SMK Negeri 1 Kawali
+ * 
+ * @returns {JSX.Element} - The JSX element representing the headline.
+ */
 export const HeadlineForm: React.FC = (): JSX.Element => {
   return (
     <div className="flex flex-col items-center pb-6">

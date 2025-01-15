@@ -17,6 +17,7 @@ import { HiOutlineEyeOff  } from "react-icons/hi";
 import { LuMoonStar, LuSun } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5"
 import { TbCalendarClock } from "react-icons/tb";
+import { BsInfo } from "react-icons/bs";
 
 type IconProps = {
   size?: number;
@@ -60,7 +61,10 @@ export const Icons = {
   Notification: ({ size = IconSize, className = "", color }: IconProps) => (
     <MdOutlineNotifications size={size} className={className} color={color} />
   ),
-  CalendarClock : ({ size = IconSize, className = "", color }: IconProps) => (
+  CalendarClock : ({ size = 18, className = "", color }: IconProps) => (
     <TbCalendarClock size={size} className={className} color={color} />
+  ),
+  Info : ({ size = IconSize, className = "", color }: IconProps) => (
+    <BsInfo size={size} className={className} color={color} />
   ),
 };

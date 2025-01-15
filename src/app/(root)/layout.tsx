@@ -1,7 +1,6 @@
 "use client";
 
 import Providers from "@/components/layouts/Providers";
-import { ButtonsFloat } from "@/components/fragments/ButtonsFloat";
 
 /**
  * This component is a wrapper for the entire application.
@@ -13,8 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <Providers>
-      <div className="container">{children}</div>
-      <ButtonsFloat />
+      <div className="container relative z-50 overflow-x-hidden">{children}</div>
     </Providers>
   );
 }
