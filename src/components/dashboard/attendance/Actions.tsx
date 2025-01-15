@@ -25,36 +25,11 @@ export const Actions = ({ checkIn, checkOut }: { checkIn: boolean; checkOut: boo
 
       if (actionType === 'checkin') {
         mutateCheckIn({
-          
-          // Jarak 500 meter
-          // -7.186907263189334, 108.3622633807071
-          
-          // Jarak 700 meter
-          // -7.193195492378045, 108.3622633807071
-          
-          // Jarak 900 meter
-          // -7.1949921229462825, 108.3622633807071
-
-          // Jarak 950 meter
-          // -7.195441280588343, 108.3622633807071
-          
-          // Jarak 1 km
-          // -7.195890438230404, 108.3622633807071
-          
-          // Jarak 1,1 km
-          // -7.196788753514521, 108.3622633807071
-
-          // latitude: -7.195890438230404, // Ganti dengan locationData.latitude
-          // longitude: 108.3622633807071, 
-
           latitude: locationData.latitude,
           longitude: locationData.longitude
         });
       } else {
         mutateCheckOut({
-          // latitude:  -7.196788753514521, 
-          // longitude: 108.3622633807071,
-
           latitude: locationData.latitude,
           longitude: locationData.longitude
         });
@@ -67,6 +42,11 @@ export const Actions = ({ checkIn, checkOut }: { checkIn: boolean; checkOut: boo
 
   return (
     <div className="flex justify-center gap-2 sm:gap-4">
+      {/* {location?.latitude && location?.longitude && (
+        <p className="text-sm">
+          Latitude: {location.latitude.toFixed(6)}, Longitude: {location.longitude.toFixed(6)}
+        </p>
+      )} */}
       <Button
         onPress={() => handleAction('checkin')}
         variant="shadow"
