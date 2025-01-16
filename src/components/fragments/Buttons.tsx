@@ -26,7 +26,7 @@ export const Buttons = () => {
 
   return (
     <>
-      <Tooltip content="Theme" placement="bottom">
+      <Tooltip content="Thema" placement="bottom">
         <Button isIconOnly onPress={toggleTheme} variant="bordered">
           {isTheme ? <Icons.Sun /> : <Icons.Moon />}
         </Button>

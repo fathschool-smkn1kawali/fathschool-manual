@@ -10,7 +10,7 @@ import { toast } from "sonner";
  * @returns {UseMutationResult<AxiosResponse, unknown, TypeLoginSchema, unknown>} The result of the mutation.
  */
 export function useLogin(): UseMutationResult<AxiosResponse, unknown, TypeLoginSchema, unknown> {
-  const url = `${process.env.NEXT_PUBLIC_LINK_BACKEND?.toString()}/loginUsers`;
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/loginUsers`;
 
   return useMutation({
     mutationFn: async (data: TypeLoginSchema) => axios.post<AxiosResponse>(url, data),

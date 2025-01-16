@@ -33,7 +33,7 @@ function useCheckById(id: string | null) {
  * @returns {UseMutationResult<AxiosResponse, unknown, CheckLocation, unknown>} The result of the mutation.
  */
 function useCheckIn() {
-  const url = `${process.env.NEXT_PUBLIC_LINK_BACKEND?.toString()}/checkinManual`
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/checkinManual`
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -79,7 +79,7 @@ function useCheckIn() {
  * @returns {UseMutationResult<AxiosResponse, unknown, CheckLocation, unknown>} The result of the mutation.
  */
 function useCheckOut() {
-  const url = `${process.env.NEXT_PUBLIC_LINK_BACKEND?.toString()}/checkoutManual`
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/checkoutManual`
   const queryClient = useQueryClient();
 
   return useMutation({

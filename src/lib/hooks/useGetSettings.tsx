@@ -2,7 +2,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 export function useGetSettings() {
-  const url = process.env.NEXT_PUBLIC_SETTINGS?.toString() || "http://localhost:8000/api/getSettings";
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/getSettings`;
 
   return useQuery({
     queryKey: ['settings'],

@@ -51,12 +51,7 @@ export const NavBar: React.FC = (): React.ReactElement => {
         <NavbarContent justify="end">
           <NavbarItem className="hidden sm:flex gap-2 border-e-2 pe-2">
             {navbarItems.map((item, index) => (
-              <Button
-                key={index}
-                onPress={item.onCLick}
-                isIconOnly
-                variant="bordered"
-              >
+              <Button key={index} onPress={item.onCLick} isIconOnly variant="bordered">
                 {item.icon}
               </Button>
             ))}
