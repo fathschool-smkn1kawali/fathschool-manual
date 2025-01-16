@@ -35,7 +35,9 @@ export default function Login(): React.ReactElement {
 
   return (
     <section>
-      <Buttons />
+      <div className="gap-2 flex justify-end relative z-50">
+        <Buttons />
+      </div>
 
       <LoginForm />
     </section>
