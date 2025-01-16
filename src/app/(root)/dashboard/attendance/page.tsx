@@ -14,8 +14,13 @@ import { useEffect, useState } from "react";
 export default function Attendance(): React.ReactElement {
   const { data: dataSettings } = useGetSettings();
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<{ name: string, id: number } | null>(null);
+  const [user, setUser] = useState<{ name: string, id: number } | null>(() => {
+    // Initialize state langsung dari localStorage
+    const userData = localStorage.getItem("user");
+    return userData ? JSON.parse(userData) : null;
+  });
 
+  // Check if user is logged in
   const { data: dataCheck } = useCheckById(user?.id ? user.id.toString() : null);
   
   useEffect(() => {
