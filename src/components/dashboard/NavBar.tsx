@@ -1,8 +1,21 @@
 "use client";
 
 import { Icons, Images } from "@/resource";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem} from "@nextui-org/navbar";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure} from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+} from "@nextui-org/navbar";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 import { toast } from "sonner";
 import { Buttons } from "../fragments/Buttons";
 import Image from "next/image";
@@ -48,7 +61,7 @@ export const NavBar: React.FC = (): React.ReactElement => {
               </Button>
             ))}
           </NavbarItem>
-          <NavbarItem className="gap-2 border-e-2 pe-4">
+          <NavbarItem className="gap-2 border-e-2 pe-4 flex justify-end sm:gap-4 relative z-50">
             <Buttons />
           </NavbarItem>
 
@@ -68,7 +81,10 @@ export const NavBar: React.FC = (): React.ReactElement => {
                 <h5>Konfirmasi Logout</h5>
               </ModalHeader>
               <ModalBody>
-                <p>Setelah logout, Anda perlu memasukkan kredensial untuk mengakses aplikasi lagi. Apakah Anda yakin ingin melanjutkan?</p>
+                <p>
+                  Setelah logout, Anda perlu memasukkan kredensial untuk
+                  mengakses aplikasi lagi. Apakah Anda yakin ingin melanjutkan?
+                </p>
               </ModalBody>
               <ModalFooter>
                 <Button onPress={onOpenChange} color="primary" variant="flat">

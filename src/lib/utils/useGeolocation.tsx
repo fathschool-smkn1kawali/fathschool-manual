@@ -46,23 +46,25 @@ export function useGeolocation() {
       // Jarak 1,1 km
       // -7.176907, 108.362263
 
-      // Untuk testing, kita langsung return koordinat yang diinginkan
+      // * Untuk testing, kita langsung return koordinat yang diinginkan
       // const mockLocation = {
-      //   latitude: -7.176907,
+      //   latitude: -7.195890438230404,
       //   longitude: 108.362263,
       //   accuracy: 10,
       // };
-
       // setLocation(mockLocation);
       // setIsLoading(false);
       // resolve(mockLocation);
 
-      // Comment out atau hapus navigator.geolocation.getCurrentPosition jika ingin menggunakan koordinat tetap
+
+      // * Comment out atau hapus navigator.geolocation.getCurrentPosition jika ingin menggunakan koordinat tetap
       
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
           const { latitude, longitude, accuracy } = position.coords;
           const locationData = { latitude, longitude, accuracy };
+    
+          console.log(location)
           
           setLocation(locationData);
           setIsLoading(false);
@@ -97,8 +99,6 @@ export function useGeolocation() {
           maximumAge: 0,
         }
       );
-
-      console.log(location)
       
     });
   };

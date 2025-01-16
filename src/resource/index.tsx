@@ -14,7 +14,7 @@ export const Images = {
 import { RiLockPasswordLine, RiCustomerService2Line, RiUser3Line } from "react-icons/ri";
 import { MdOutlineNotifications, MdLogout, MdOutlineEmail, MdOutlineRemoveRedEye } from "react-icons/md";
 import { HiOutlineEyeOff  } from "react-icons/hi";
-import { LuMoonStar, LuSun } from "react-icons/lu";
+import { LuMoonStar, LuSun, LuClock8  } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5"
 import { TbCalendarClock } from "react-icons/tb";
 import { BsInfo } from "react-icons/bs";
@@ -66,5 +66,8 @@ export const Icons = {
   ),
   Info : ({ size = IconSize, className = "", color }: IconProps) => (
     <BsInfo size={size} className={className} color={color} />
+  ),
+  Clock : ({ size = IconSize, className = "", color }: IconProps) => (
+    <LuClock8 size={size} className={className} color={color} />
   ),
 };
