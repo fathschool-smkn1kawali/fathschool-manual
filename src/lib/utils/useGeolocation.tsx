@@ -47,58 +47,58 @@ export function useGeolocation() {
       // -7.176907, 108.362263
 
       // * Untuk testing, kita langsung return koordinat yang diinginkan
-      const mockLocation = {
-        latitude: -7.195890438230404,
-        longitude: 108.362263,
-        accuracy: 10,
-      };
-      setLocation(mockLocation);
-      setIsLoading(false);
-      resolve(mockLocation);  
+      // const mockLocation = {
+      //   latitude: -7.195890438230404,
+      //   longitude: 108.362263,
+      //   accuracy: 10,
+      // };
+      // setLocation(mockLocation);
+      // setIsLoading(false);
+      // resolve(mockLocation);  
 
 
       // * Comment out atau hapus navigator.geolocation.getCurrentPosition jika ingin menggunakan koordinat tetap
       
-      // navigator.geolocation.getCurrentPosition(
-      //   (position: GeolocationPosition) => {
-      //     const { latitude, longitude, accuracy } = position.coords;
-      //     const locationData = { latitude, longitude, accuracy };
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          const { latitude, longitude, accuracy } = position.coords;
+          const locationData = { latitude, longitude, accuracy };
     
-      //     console.log(location)
+          console.log(location)
           
-      //     setLocation(locationData);
-      //     setIsLoading(false);
-      //     resolve(locationData);
-      //   },
-      //   (err: GeolocationPositionError) => {
-      //     let errorMsg: string;
+          setLocation(locationData);
+          setIsLoading(false);
+          resolve(locationData);
+        },
+        (err: GeolocationPositionError) => {
+          let errorMsg: string;
           
-      //     switch (err.code) {
-      //       case err.PERMISSION_DENIED:
-      //         errorMsg = "Akses ditolak. Harap izinkan akses GPS.";
-      //         break;
-      //       case err.POSITION_UNAVAILABLE:
-      //         errorMsg = "Informasi lokasi tidak tersedia.";
-      //         break;
-      //       case err.TIMEOUT:
-      //         errorMsg = "Permintaan untuk mendapatkan lokasi Anda telah berakhir waktu.";
-      //         break;
-      //       default:
-      //         errorMsg = "Terjadi kesalahan yang tidak diketahui.";
-      //         break;
-      //     }
+          switch (err.code) {
+            case err.PERMISSION_DENIED:
+              errorMsg = "Akses ditolak. Harap izinkan akses GPS.";
+              break;
+            case err.POSITION_UNAVAILABLE:
+              errorMsg = "Informasi lokasi tidak tersedia.";
+              break;
+            case err.TIMEOUT:
+              errorMsg = "Permintaan untuk mendapatkan lokasi Anda telah berakhir waktu.";
+              break;
+            default:
+              errorMsg = "Terjadi kesalahan yang tidak diketahui.";
+              break;
+          }
           
-      //     toast.error(errorMsg);
-      //     setError(errorMsg);
-      //     setIsLoading(false);
-      //     resolve(null);
-      //   },
-      //   {
-      //     enableHighAccuracy: true,
-      //     timeout: 10000,
-      //     maximumAge: 0,
-      //   }
-      // );
+          toast.error(errorMsg);
+          setError(errorMsg);
+          setIsLoading(false);
+          resolve(null);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
       
     });
   };
