@@ -14,26 +14,25 @@ import { useEffect, useState } from "react";
 export default function Attendance(): React.ReactElement {
   const { data: dataSettings } = useGetSettings();
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<{ name: string, id: number } | null>(() => {
-    // Initialize state langsung dari localStorage
-    const userData = localStorage.getItem("user");
-    return userData ? JSON.parse(userData) : null;
-  });
+  const [user, setUser] = useState<{ name: string; id: number } | null>(null);
 
   // Check if user is logged in
   const { data: dataCheck } = useCheckById(user?.id ? user.id.toString() : null);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      const userData = localStorage.getItem("user");
-      const parsedUser = userData ? JSON.parse(userData) : null;
+      // Pastikan kode hanya berjalan di browser
+      if (typeof window !== "undefined") {
+        const userData = localStorage.getItem("user");
+        const parsedUser = userData ? JSON.parse(userData) : null;
 
-      if (!parsedUser) {
-        window.location.href = "/";
-        return;
+        if (!parsedUser) {
+          window.location.href = "/";
+          return;
+        }
+
+        setUser(parsedUser);
       }
-
-      setUser(parsedUser);
       setLoading(false);
     }, 1200);
 
@@ -41,7 +40,7 @@ export default function Attendance(): React.ReactElement {
   }, []);
 
   if (loading) return <div className="min-h-[600px] flex items-center justify-center">Loading...</div>
-
+  
   return (
     <main className="min-h-[600px]">
       <Hero
