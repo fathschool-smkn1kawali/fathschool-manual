@@ -8,6 +8,7 @@ import { useLogin } from "@/lib/hooks/useLogin";
 import { useState } from "react";
 import { Icons, Images } from "@/resource";
 import { HeadlineForm } from "./HeadlineForm";
+import Link from "next/link";
 
 /**
  * * LoginForm component that provides a user interface for logging in.
@@ -31,10 +32,11 @@ export const LoginForm: React.FC = () => {
       {/* Form */}
       <div className="flex h-full w-full py-8 items-center justify-center">
         <div className="flex w-full max-w-sm flex-col gap-4">
-          <HeadlineForm />
+          <HeadlineForm title="Selamat Datang" desc="Log In untuk Absensi Sekolah SMK Negeri 1 Kawali" />
 
           <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
             <Input
+              startContent={<Icons.Email />}
               labelPlacement="outside"
               label="Email Address"
               placeholder="Masukan email Anda"
@@ -46,6 +48,7 @@ export const LoginForm: React.FC = () => {
               {...register("email")}
             />
             <Input
+              startContent={<Icons.Password />}
               endContent={
                 <button type="button" onClick={() => setIsVisible(!isVisible)}>
                   {isVisible ? <Icons.ShowEye /> : <Icons.EyeOff />}
@@ -61,15 +64,20 @@ export const LoginForm: React.FC = () => {
               errorMessage={errors.password?.message}
               {...register("password")}
             />
-            <Button
-              className="w-full font-semibold"
-              color="primary"
-              type="submit"
-              isLoading={status === "loading"}
-              disabled={status === "loading"}
-            >
-              Log In
-            </Button>
+            <div>
+              <span className="flex justify-end">
+                <Link href="/auth/forgot-password" className="text-sm text-primary font-medium underline-offset-2 underline">Lupa Password</Link>
+              </span>
+              <Button
+                className="w-full font-semibold mt-2.5"
+                color="primary"
+                type="submit"
+                isLoading={status === "loading"}
+                disabled={status === "loading"}
+              >
+                Log In
+              </Button>
+            </div>
           </form>
         </div>
       </div>

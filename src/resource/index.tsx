@@ -15,9 +15,10 @@ import { RiLockPasswordLine, RiCustomerService2Line, RiUser3Line } from "react-i
 import { MdOutlineNotifications, MdLogout, MdOutlineEmail, MdOutlineRemoveRedEye } from "react-icons/md";
 import { HiOutlineEyeOff  } from "react-icons/hi";
 import { LuMoonStar, LuSun, LuClock8  } from "react-icons/lu";
-import { IoSettingsOutline } from "react-icons/io5"
+import { IoSettingsOutline, IoChevronBackOutline } from "react-icons/io5"
 import { TbCalendarClock } from "react-icons/tb";
 import { BsInfo } from "react-icons/bs";
+import { LiaPhoneSolid } from "react-icons/lia";
 
 type IconProps = {
   size?: number;
@@ -69,5 +70,11 @@ export const Icons = {
   ),
   Clock : ({ size = IconSize, className = "", color }: IconProps) => (
     <LuClock8 size={size} className={className} color={color} />
+  ),
+  Phone: ({ size = IconSize, className = "", color }: IconProps) => (
+    <LiaPhoneSolid size={size} className={className} color={color} />
+  ),
+  Back: ({ size = IconSize, className = "", color }: IconProps) => (
+    <IoChevronBackOutline size={size} className={className} color={color} />
   ),
 };

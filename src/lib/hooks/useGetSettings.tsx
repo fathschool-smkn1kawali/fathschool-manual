@@ -7,7 +7,7 @@ export function useGetSettings() {
   return useQuery({
     queryKey: ['settings'],
     queryFn: async () => axios.get(url),
-    refetchOnWindowFocus: false,
+    refetchInterval: 60000, // Refetch every 60 seconds,
     onError: (error) => console.log("Error:", error),
     onSuccess: (data) => console.log("Settings:", data),
   })

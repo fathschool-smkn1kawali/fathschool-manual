@@ -15,10 +15,11 @@ type CheckLocation = {
  * @returns {UseQueryResult<boolean, AxiosError>} The result of the query.
  */
 function useCheckById(id: string | null) {
-  const url = `${process.env.NEXT_PUBLIC_LINK_BACKEND?.toString()}/isCheckinManual/${id}`
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/isCheckinManual/${id}`
 
   return useQuery({
     queryKey: ['checkById', id],
+    refetchInterval: 10000, // Refetch every 10 seconds
     queryFn: async () => axios.get(url),
     onError: (error) => console.error("Error fetching check data:", error),
   })
