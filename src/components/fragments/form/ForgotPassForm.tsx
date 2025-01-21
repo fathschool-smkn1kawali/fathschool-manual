@@ -3,9 +3,23 @@
 import { Button, Image, Input } from "@nextui-org/react";
 import { HeadlineForm } from "./HeadlineForm";
 import { Icons, Images } from "@/resource";
-import { toast } from "sonner";
+import { useForgotPass } from "@/lib/hooks/useForgotPass";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { forgotPassSchema, TypeForgotPassSchema } from "@/types/Schema";
 
 const ForgotPassForm = () => {
+  const { mutate, status } = useForgotPass();
+  const { handleSubmit, register, reset, formState: { errors } } = useForm<TypeForgotPassSchema>({
+    mode: "all",
+    resolver: zodResolver(forgotPassSchema),
+  });
+
+  const onSubmit: SubmitHandler<TypeForgotPassSchema> = (data) => {
+    mutate(data)
+    reset();
+  };
+ 
   return (
     <div className="block pt-16 sm:pt-24 lg:flex justify-center gap-8 xl:gap-12">
       <div className="w-full hidden lg:flex items-center justify-center cursor-pointer">
@@ -26,7 +40,7 @@ const ForgotPassForm = () => {
             desc="Masukkan No WhatsApp Anda untuk Memulai Proses Reset Password"
           />
 
-          <form className="flex flex-col gap-3">
+          <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
             <Input
               startContent={<Icons.Phone />}
               labelPlacement="outside"
@@ -34,13 +48,17 @@ const ForgotPassForm = () => {
               placeholder="Masukan No WhatsApp Anda"
               type="text"
               variant="bordered"
+              isInvalid={!!errors.phone}
+              errorMessage={errors.phone?.message}
+              {...register("phone")}
             />
             <div>
               <Button
                 className="w-full font-semibold mt-2.5"
                 color="primary"
-                type="button"
-                onPress={() => toast.info('Ups, Fitur belum tersedia')}
+                type="submit"
+                isLoading={status === "loading"}
+                isDisabled={status === "loading"}
               >
                 Submit
               </Button>
