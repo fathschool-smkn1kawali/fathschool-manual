@@ -23,7 +23,6 @@ export const Actions = ({ checkIn, checkOut }: Props): React.ReactElement => {
   const { mutate: CheckIn, isLoading: loadCheckIn } = useCheckIn();
   const { mutate: CheckOut, isLoading: loadChekOut } = useCheckOut();
   const { onOpen, isOpen, onOpenChange } = useDisclosure();
-  // const { mutate: mutateLeave, isLoading: isLoadingLeave } = ...();
 
   const handleAction = async (actionType: "checkin" | "checkout" | "leave") => {
     try {

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const ACCEPTED_IMAGE_TYPES = [ "image/jpeg", "image/jpg", "image/png", "image/gif", "image/svg+xml" ];
+
 export const loginSchema = z.object({
   email: z.string().email("Email tidak valid"),
   password: z.string().min(6, "Password minimal 6 karakter"),
@@ -18,13 +20,15 @@ export const forgotPassSchema = z.object({
 export type TypeForgotPassSchema = z.infer<typeof forgotPassSchema>;
 
 export const leaveSchema = z.object({
-  user_id: z.string().uuid(),
-  start_date: z.date(), 
-  end_date: z.date(), 
-  leave_type_id: z.number().int(),
-  title: z.string().min(1).max(255), 
-  message: z.string().min(1).max(1000),
-  image: z.instanceof(File).optional(),
+  // leave_type_id: z.number().int(),
+  // start: z.date(), 
+  // image: z.string().optional()
+  title: z.string().min(0, 'Judul tidak boleh kosong').max(255, 'Judul maksimal 255 karakter'), 
+  end: z.string().min(0, 'Waktu tidak boleh kosong').max(255, 'Waktu maksimal 255 karakter'),
+  description: z.string().min(0, 'Message tidak boleh kosong').max(1000, "Message maksimal 1000 karakter"),
+  image: z.custom<FileList>().optional().refine((files) => !files || files.length === 0 || ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+    "Hanya format .jpg, .jpeg, .png, .gif dan .svg yang didukung"
+  ),
 });
 
 export type TypeLeaveSchema = z.infer<typeof leaveSchema>;

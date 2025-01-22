@@ -18,7 +18,7 @@ import { LuMoonStar, LuSun, LuClock8  } from "react-icons/lu";
 import { IoSettingsOutline, IoChevronBackOutline } from "react-icons/io5"
 import { TbCalendarClock } from "react-icons/tb";
 import { BsInfo } from "react-icons/bs";
-import { LiaPhoneSolid } from "react-icons/lia";
+import { LiaPhoneSolid, LiaUserShieldSolid } from "react-icons/lia";
 
 type IconProps = {
   size?: number;
@@ -76,5 +76,8 @@ export const Icons = {
   ),
   Back: ({ size = IconSize, className = "", color }: IconProps) => (
     <IoChevronBackOutline size={size} className={className} color={color} />
+  ),
+  Role: ({ size = IconSize, className = "", color }: IconProps) => (
+    <LiaUserShieldSolid size={size} className={className} color={color} />
   ),
 };

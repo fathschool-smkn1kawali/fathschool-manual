@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 export default function Attendance(): React.ReactElement {
   const { data: dataSettings } = useGetSettings();
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<{ name: string; id: number } | null>(null);
+  const [user, setUser] = useState<{ name: string; id: number, role: string } | null>(null);
 
   // Check if user is logged in
   const { data: dataCheck } = useCheckById(user?.id ? user.id.toString() : null);
@@ -47,6 +47,7 @@ export default function Attendance(): React.ReactElement {
       <Hero
         actions={{ In: dataCheck?.data?.checkedin, Out: dataCheck?.data?.checkedout, Leave: dataCheck?.data?.leave }}
         greeting={{
+          role: user?.role ?? "Admin", 
           nameUser: capitalizeWords(user?.name ?? "User"),
           description: dataSettings?.data.data.mobile_settings.conclusion_apps,
         }}

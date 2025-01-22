@@ -1,6 +1,6 @@
 import { GetTime } from "@/lib/utils/moment";
 import { Icons } from "@/resource";
-import { Chip } from "@nextui-org/react";
+import { Chip, ChipVariantProps } from "@nextui-org/react";
 import { Actions } from "./Actions";
 import { Greet } from "@/components/elements/Greet";
 
@@ -10,7 +10,16 @@ import { Greet } from "@/components/elements/Greet";
  *
  * @returns {React.ReactElement} A Hero component.
  */
-export const Hero = ({ greeting: { nameUser, description }, actions: { In, Out, Leave } }: Props): React.ReactElement => {
+export const Hero = ({ greeting: { nameUser, description, role }, actions: { In, Out, Leave } }: Props): React.ReactElement => {
+  const roleText = role === 'Student' ? 'Siswa' : role === 'Teacher' ? 'Guru' : role === 'Administration' ? 'Tata Usaha' : 'Admin';
+
+  const styleDefault: ChipVariantProps & { classNames: { base: string, content: string } } = {
+    variant: "flat",
+    classNames: {
+      base: "px-4 py-2",
+      content: "px-2"
+    }
+  }
 
   return (
     <section>
@@ -18,10 +27,13 @@ export const Hero = ({ greeting: { nameUser, description }, actions: { In, Out, 
 
         <div className="text-center">
           <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
-            <Chip startContent={<Icons.CalendarClock />} variant="flat" color="primary" classNames={{ content: "px-2", base: "px-4" }}>
+            <Chip startContent={<Icons.CalendarClock />} {...styleDefault} color="primary">
               <span>{GetTime()}</span>
             </Chip>
-            <Chip startContent={<Icons.Info />} variant="flat" color={Leave ? "warning" : !In && !Out ? "danger" : "success"} classNames={{ content: "px-2", base: "px-4" }}>
+            <Chip startContent={<Icons.Role />} {...styleDefault} color="secondary">
+              <span>{roleText}</span>
+            </Chip>
+            <Chip startContent={<Icons.Info />} {...styleDefault} color={Leave ? "warning" : !In && !Out ? "danger" : "success"}>
               <span>
                 {In && !Out && "Anda sudah Check In."}
                 {Out && In && "Anda sudah Check Out."}
@@ -41,6 +53,7 @@ export const Hero = ({ greeting: { nameUser, description }, actions: { In, Out, 
           </p>
         </div>
 
+        {/* <Actions checkIn={In} checkOut={Out} roleUser={role} /> */}
         <Actions checkIn={In} checkOut={Out} />
       </div>
     </section>
@@ -57,5 +70,6 @@ type Props = {
   greeting: {
     nameUser: string;
     description: string;
+    role: string;
   };
 }

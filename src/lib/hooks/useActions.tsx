@@ -120,18 +120,28 @@ function useLeave() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data) => {
+    mutationFn: async (payload: { title: string; start: string; end: string; message: string; image: string | null; }) => {
       const userString = localStorage.getItem("user");
       if (!userString) {
         throw new Error("User not found in localStorage");
       }
 
       const user = JSON.parse(userString);
-      const payload = {
-        user_id: user.id,
+
+      const leavePayload = {
+        leave_type_id: user.id,
+        title: payload.title,
+        start: payload.start,
+        end: payload.end,
+        message: payload.message,
+        image: payload.image ? payload.image : null,
       };
 
-      return axios.post(url, payload);
+      return axios.post(url, leavePayload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
     },
     onError: (error: AxiosError) => {
       const status = (error?.response?.data as { status: number })?.status || 500
