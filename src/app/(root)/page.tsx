@@ -3,6 +3,7 @@
 import { LoginForm } from "@/components/fragments/form/LoginForm";
 import { useEffect, useState } from "react";
 import { Buttons } from "@/components/fragments/Buttons";
+import Loader from "@/components/layouts/Loader";
 
 /**
  * * A login page component.
@@ -31,7 +32,7 @@ export default function Login(): React.ReactElement {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) return <div className="min-h-[600px] flex items-center justify-center">Loading...</div>
+  if (loading) return <Loader/>
 
   return (
     <section>

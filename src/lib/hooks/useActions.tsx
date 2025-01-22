@@ -115,8 +115,42 @@ function useCheckOut() {
   });
 }
 
+function useLeave() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/leaveManual`
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data) => {
+      const userString = localStorage.getItem("user");
+      if (!userString) {
+        throw new Error("User not found in localStorage");
+      }
+
+      const user = JSON.parse(userString);
+      const payload = {
+        user_id: user.id,
+      };
+
+      return axios.post(url, payload);
+    },
+    onError: (error: AxiosError) => {
+      const status = (error?.response?.data as { status: number })?.status || 500
+      const statusText = status === 400 ? 'Anda Sudah Cuti' : status === 403 ? 'Anda Berada Diluar Jangkauan' : status === 404 ? 'User Tidak Ditemukan' : 'Terjadi Kesalahan pada Server'
+
+      toast.error(statusText)
+    },
+    onSuccess: (data) => {
+      console.log(data);
+
+      queryClient.invalidateQueries(["checkById"]);
+      toast.success("Cuti Berhasil")
+    },
+  });
+}
+
 export {
   useCheckIn,
   useCheckOut,
+  useLeave,
   useCheckById
 }

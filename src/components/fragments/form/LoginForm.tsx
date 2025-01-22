@@ -4,11 +4,11 @@ import { loginSchema, TypeLoginSchema } from "@/types/Schema";
 import { Button, Input, Image } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLogin } from "@/lib/hooks/useLogin";
 import { useState } from "react";
 import { Icons, Images } from "@/resource";
 import { HeadlineForm } from "./HeadlineForm";
 import Link from "next/link";
+import { useLogin } from "@/lib/hooks/useAuth";
 
 /**
  * * LoginForm component that provides a user interface for logging in.

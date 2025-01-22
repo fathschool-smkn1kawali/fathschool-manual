@@ -1,7 +1,8 @@
-import { GetTime, SayHello } from "@/lib/utils/moment";
+import { GetTime } from "@/lib/utils/moment";
 import { Icons } from "@/resource";
 import { Chip } from "@nextui-org/react";
 import { Actions } from "./Actions";
+import { Greet } from "@/components/elements/Greet";
 
 /**
  * This is a strongly typed React Functional Component that renders a hero
@@ -9,7 +10,7 @@ import { Actions } from "./Actions";
  *
  * @returns {React.ReactElement} A Hero component.
  */
-export const Hero = ({ greeting: { nameUser, description }, actions: { In, Out } }: Props): React.ReactElement => {
+export const Hero = ({ greeting: { nameUser, description }, actions: { In, Out, Leave } }: Props): React.ReactElement => {
 
   return (
     <section>
@@ -20,17 +21,20 @@ export const Hero = ({ greeting: { nameUser, description }, actions: { In, Out }
             <Chip startContent={<Icons.CalendarClock />} variant="flat" color="primary" classNames={{ content: "px-2", base: "px-4" }}>
               <span>{GetTime()}</span>
             </Chip>
-            <Chip startContent={<Icons.Info />} variant="flat" color={!In && !Out ? "warning" : "success"} classNames={{ content: "px-2", base: "px-4" }}>
+            <Chip startContent={<Icons.Info />} variant="flat" color={Leave ? "warning" : !In && !Out ? "danger" : "success"} classNames={{ content: "px-2", base: "px-4" }}>
               <span>
-                {In && !Out && "Anda sudah Check In"}
-                {Out && In && "Anda sudah Check Out"}
-                {!In && !Out && "Anda belum Check In"}
+                {In && !Out && "Anda sudah Check In."}
+                {Out && In && "Anda sudah Check Out."}
+                {!In && !Out && !Leave && "Belum Check In."}
+                {Leave && "Status: Izin."}
               </span>
             </Chip>
           </div>
 
           <div className="my-4 sm:my-6">
-            <h2 className="sm:w-5/6 lg:w-3/4 mx-auto line-clamp-2">{SayHello()} {nameUser}</h2>
+            {/* <h2 className="sm:w-5/6 lg:w-3/4 mx-auto line-clamp-2">{SayHello()} {nameUser}</h2> */}
+            <Greet/>
+            <h2 className="sm:w-5/6 lg:w-3/4 mx-auto line-clamp-2">{nameUser}</h2>
           </div>
           <p className="sm:w-4/6 lg:w-3/5 mx-auto">
             {description ?? 'Bagi siswa dan guru yang tidak dapat menggunakan fitur biometrik dapat menggunakan fitur ini. Pastikan aktifasi lokasi sudah sesuai dengan area di sekolah.'}
@@ -48,6 +52,7 @@ type Props = {
   actions: {
     In: boolean;
     Out: boolean;
+    Leave: boolean; 
   }
   greeting: {
     nameUser: string;

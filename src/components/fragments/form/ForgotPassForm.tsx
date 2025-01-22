@@ -3,7 +3,7 @@
 import { Button, Image, Input } from "@nextui-org/react";
 import { HeadlineForm } from "./HeadlineForm";
 import { Icons, Images } from "@/resource";
-import { useForgotPass } from "@/lib/hooks/useForgotPass";
+import { useForgotPass } from "@/lib/hooks/useAuth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forgotPassSchema, TypeForgotPassSchema } from "@/types/Schema";

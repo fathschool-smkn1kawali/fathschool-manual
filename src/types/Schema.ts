@@ -16,3 +16,15 @@ export const forgotPassSchema = z.object({
 });
 
 export type TypeForgotPassSchema = z.infer<typeof forgotPassSchema>;
+
+export const leaveSchema = z.object({
+  user_id: z.string().uuid(),
+  start_date: z.date(), 
+  end_date: z.date(), 
+  leave_type_id: z.number().int(),
+  title: z.string().min(1).max(255), 
+  message: z.string().min(1).max(1000),
+  image: z.instanceof(File).optional(),
+});
+
+export type TypeLeaveSchema = z.infer<typeof leaveSchema>;

@@ -1,7 +1,8 @@
 "use client";
 
-import { Hero } from "@/components/dashboard/attendance/Hero";
-import { useCheckById } from "@/lib/hooks/useAttendance";
+import { Hero } from "@/components/dashboard/Hero";
+import Loader from "@/components/layouts/Loader";
+import { useCheckById } from "@/lib/hooks/useActions";
 import { useGetSettings } from "@/lib/hooks/useGetSettings";
 import { capitalizeWords } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -39,12 +40,12 @@ export default function Attendance(): React.ReactElement {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) return <div className="min-h-[600px] flex items-center justify-center">Loading...</div>
+  if (loading) return <Loader/>
   
   return (
     <main className="min-h-[600px]">
       <Hero
-        actions={{ In: dataCheck?.data?.checkedin, Out: dataCheck?.data?.checkedout }}
+        actions={{ In: dataCheck?.data?.checkedin, Out: dataCheck?.data?.checkedout, Leave: dataCheck?.data?.leave }}
         greeting={{
           nameUser: capitalizeWords(user?.name ?? "User"),
           description: dataSettings?.data.data.mobile_settings.conclusion_apps,

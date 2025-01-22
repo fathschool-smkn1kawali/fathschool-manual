@@ -11,13 +11,13 @@ function SayHello(): string {
   const hour = currentTime.hour();
 
   if (hour >= 4 && hour < 12) {
-    return "Hello, Selamat Pagi";
+    return "Selamat Pagi";
   } else if (hour >= 12 && hour < 15) {
-    return "Hello, Selamat Siang";
+    return "Selamat Siang";
   } else if (hour >= 15 && hour < 18) {
-    return "Hello, Selamat Sore";
+    return "Selamat Sore";
   } else {
-    return "Hello, Selamat Malam";
+    return "Selamat Malam";
   }
 }
 
