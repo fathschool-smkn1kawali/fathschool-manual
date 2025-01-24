@@ -1,17 +1,29 @@
+import { useLeave, useLeaveTypes } from "@/lib/hooks/useActions";
 import { leaveSchema, TypeLeaveSchema } from "@/types/Schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/modal";
-import { Button, Input, Textarea } from "@nextui-org/react";
-// import { Select, SelectItem } from "@nextui-org/select";
+import { Button, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 
 type Props = {
-  open: boolean;
-  OpenChange: (isOpen: boolean) => void;
-  OnSubmit?: () => void;
+  modal: {
+    open: boolean;
+    close: () => void;
+    OpenChange: (isOpen: boolean) => void;
+  }
+  role?: string
 }
 
-export const ModalLeave = ({ open, OpenChange }: Props): React.ReactElement => {
+interface ITypeLeave {
+  id: number;
+  role_type: string;
+  name: string;
+  slug: string;
+}
+
+export const ModalLeave = ({ modal: {open, OpenChange, close}, role }: Props): React.ReactElement => {
+  const { data: leaveTypes, isLoading } = useLeaveTypes(role === 'Administration' ? 'staff' : role ?? '');
+  const { mutate, isLoading: isLoadingLeave } = useLeave()
   const { register, handleSubmit, formState: { errors } } = useForm<TypeLeaveSchema>({
     mode: "all",
     resolver: zodResolver(leaveSchema),
@@ -19,14 +31,16 @@ export const ModalLeave = ({ open, OpenChange }: Props): React.ReactElement => {
   
   const onSubmit = (data: TypeLeaveSchema) => {
     const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('leave_type_id', data.leave_type_id);
+    formData.append('end', data.end);
+    formData.append('description', data.description);
+    if (data.image && data.image.length > 0) {
+      formData.append('image', data.image[0]); // Mengambil file pertama dari input type="file"
+    }
 
-    if (data.title) formData.append("title", data.title);
-    if (data.end) formData.append("end", data.end);
-    if (data.description) formData.append("message", data.description);
-    if (data.image) formData.append("image", data.image[0]);
-
-    console.log(data);
-    // mutate(data); // Panggil mutate untuk mengirim data ke server
+    mutate(formData);
+    close()
   };
   
   return (
@@ -34,7 +48,9 @@ export const ModalLeave = ({ open, OpenChange }: Props): React.ReactElement => {
       <ModalContent>
         {() => (
           <>
-            <ModalHeader>Modal Title</ModalHeader>
+            <ModalHeader>
+              Pengajukan Izin
+            </ModalHeader>
             <ModalBody>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-4">
@@ -47,17 +63,15 @@ export const ModalLeave = ({ open, OpenChange }: Props): React.ReactElement => {
                     isInvalid={Boolean(errors.title)}
                     {...register("title")}
                   />
-                  {/* <Select
-                    label="Tipe Izin"
-                    labelPlacement="outside"
-                    placeholder="Pilih tipe anda"
-                    errorMessage={errors.leave_type_id?.message?.toString()}
-                    isInvalid={Boolean(errors.leave_type_id)}
-                    {...register("leave_type_id")}
-                  >
-                    <SelectItem>Keperluan Pribadi</SelectItem>
-                    <SelectItem>Lainnya</SelectItem>
-                  </Select> */}
+                   <Select label="Tipe Izin" labelPlacement="outside" placeholder="Pilih tipe anda" errorMessage={errors.leave_type_id?.message?.toString()} isInvalid={Boolean(errors.leave_type_id)} {...register("leave_type_id")}>
+                    {isLoading ? <SelectItem value="">Loading...</SelectItem> : leaveTypes?.data?.length === 0 ? <SelectItem value="">Tidak ada tipe izin tersedia</SelectItem>  : (
+                       leaveTypes?.data?.data?.map((leaveType: ITypeLeave) => (
+                         <SelectItem key={leaveType.id} value={leaveType.id}>
+                           {leaveType.name}
+                         </SelectItem>
+                       ))
+                     )}
+                    </Select>
                   <Input
                     label="Sampai Tanggal"
                     labelPlacement="outside"
@@ -87,7 +101,7 @@ export const ModalLeave = ({ open, OpenChange }: Props): React.ReactElement => {
                     {...register("description")}
                   />
                 </div>
-                <Button type="submit" color="warning" className="text-white mt-4 font-semibold mb-6" fullWidth>
+                <Button type="submit" color="warning" className="text-white mt-4 font-semibold mb-6" isLoading={isLoadingLeave} isDisabled={isLoadingLeave} fullWidth>
                   Submit
                 </Button>
               </form>

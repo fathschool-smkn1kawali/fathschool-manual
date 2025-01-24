@@ -23,9 +23,10 @@ export const leaveSchema = z.object({
   // leave_type_id: z.number().int(),
   // start: z.date(), 
   // image: z.string().optional()
-  title: z.string().min(0, 'Judul tidak boleh kosong').max(255, 'Judul maksimal 255 karakter'), 
-  end: z.string().min(0, 'Waktu tidak boleh kosong').max(255, 'Waktu maksimal 255 karakter'),
-  description: z.string().min(0, 'Message tidak boleh kosong').max(1000, "Message maksimal 1000 karakter"),
+  title: z.string().min(1, 'Judul tidak boleh kosong').max(255, 'Judul maksimal 255 karakter'),
+  leave_type_id: z.string().min(1, 'Jenis cuti tidak boleh kosong'), 
+  description: z.string().min(1, 'Message tidak boleh kosong').max(1000, "Message maksimal 1000 karakter"),
+  end: z.string().min(1, 'Waktu tidak boleh kosong').max(255, 'Waktu maksimal 255 karakter'),
   image: z.custom<FileList>().optional().refine((files) => !files || files.length === 0 || ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
     "Hanya format .jpg, .jpeg, .png, .gif dan .svg yang didukung"
   ),

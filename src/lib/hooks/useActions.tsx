@@ -61,9 +61,7 @@ function useCheckIn() {
       console.log(error);
       toast.error(statusText)
     },
-    onSuccess: (data) => {
-      console.log(data);
-      
+    onSuccess: () => {
       // window.location.href = "/dashboard/attendance";
       queryClient.invalidateQueries(["checkById"]);
       toast.success("Check In Berhasil")
@@ -105,9 +103,7 @@ function useCheckOut() {
 
       toast.error(statusText)
     },
-    onSuccess: (data) => {
-      console.log(data);
-
+    onSuccess: () => {
       // window.location.href = "/dashboard/attendance";
       queryClient.invalidateQueries(["checkById"]);
       toast.success("Check Out Berhasil")
@@ -115,28 +111,41 @@ function useCheckOut() {
   });
 }
 
+
+
+
 function useLeave() {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/leaveManual`
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/leaveManual`;
   const queryClient = useQueryClient();
 
+  // Helper function to format date as YYYY-MM-DD
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   return useMutation({
-    mutationFn: async (payload: { title: string; start: string; end: string; message: string; image: string | null; }) => {
+    mutationFn: async (payload: FormData) => {
       const userString = localStorage.getItem("user");
       if (!userString) {
         throw new Error("User not found in localStorage");
       }
-
+  
       const user = JSON.parse(userString);
-
-      const leavePayload = {
-        leave_type_id: user.id,
-        title: payload.title,
-        start: payload.start,
-        end: payload.end,
-        message: payload.message,
-        image: payload.image ? payload.image : null,
-      };
-
+  
+      const leavePayload = new FormData();
+      leavePayload.append('user_id', user.id);
+      leavePayload.append('title', payload.get('title') as string);
+      leavePayload.append('leave_type_id', payload.get('leave_type_id') as string);
+      leavePayload.append('description', payload.get('description') as string);
+      leavePayload.append('end', formatDate(new Date(payload.get('end') as string)));
+      leavePayload.append('start', formatDate(new Date()));
+      if (payload.get('image')) {
+        leavePayload.append('image', payload.get('image') as File);
+      }
+  
       return axios.post(url, leavePayload, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -144,17 +153,28 @@ function useLeave() {
       });
     },
     onError: (error: AxiosError) => {
-      const status = (error?.response?.data as { status: number })?.status || 500
-      const statusText = status === 400 ? 'Anda Sudah Cuti' : status === 403 ? 'Anda Berada Diluar Jangkauan' : status === 404 ? 'User Tidak Ditemukan' : 'Terjadi Kesalahan pada Server'
-
-      toast.error(statusText)
+      console.log(error);
+      toast.error("Terjadi Kesalahan pada Server");
     },
-    onSuccess: (data) => {
-      console.log(data);
-
+    onSuccess: () => {
       queryClient.invalidateQueries(["checkById"]);
-      toast.success("Cuti Berhasil")
+      toast.success("Anda Berhasil Mengajukan Izin");
     },
+  });
+  
+}
+
+
+
+
+function useLeaveTypes(roleType: string) {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/leave-types/${roleType}`;
+
+  return useQuery({
+    queryKey: ['leaveTypes', roleType],
+    queryFn: async () => axios.get(url),
+    onSuccess: (data) => console.log(data),
+    onError: (error) => console.log(error),
   });
 }
 
@@ -162,5 +182,6 @@ export {
   useCheckIn,
   useCheckOut,
   useLeave,
+  useLeaveTypes,
   useCheckById
 }

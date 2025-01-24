@@ -18,7 +18,7 @@ export const Hero = ({ greeting: { nameUser, description, role }, actions: { In,
     classNames: {
       base: "px-4 py-2",
       content: "px-2"
-    }
+    },
   }
 
   return (
@@ -27,34 +27,30 @@ export const Hero = ({ greeting: { nameUser, description, role }, actions: { In,
 
         <div className="text-center">
           <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
-            <Chip startContent={<Icons.CalendarClock />} {...styleDefault} color="primary">
-              <span>{GetTime()}</span>
-            </Chip>
             <Chip startContent={<Icons.Role />} {...styleDefault} color="secondary">
               <span>{roleText}</span>
             </Chip>
-            <Chip startContent={<Icons.Info />} {...styleDefault} color={Leave ? "warning" : !In && !Out ? "danger" : "success"}>
-              <span>
-                {In && !Out && "Anda sudah Check In."}
-                {Out && In && "Anda sudah Check Out."}
-                {!In && !Out && !Leave && "Belum Check In."}
-                {Leave && "Status: Izin."}
-              </span>
+            <Chip startContent={<Icons.CalendarClock />} {...styleDefault} color="primary">
+              <span>{GetTime()}</span>
+            </Chip>
+            <Chip startContent={<Icons.Info />} {...styleDefault} color={Leave ? "warning" : !In && !Out && !Leave ? "danger" : "success"}>
+              {Leave && "Anda sudah Izin"} 
+              {!Leave && In && !Out && "Anda sudah Check In"}
+              {!Leave && In && Out && "Anda sudah Check Out"}
+              {!Leave && !In && !Out && "Belum Check In"}
             </Chip>
           </div>
 
           <div className="my-4 sm:my-6">
-            {/* <h2 className="sm:w-5/6 lg:w-3/4 mx-auto line-clamp-2">{SayHello()} {nameUser}</h2> */}
             <Greet/>
-            <h2 className="sm:w-5/6 lg:w-3/4 mx-auto line-clamp-2">{nameUser}</h2>
+            <h2 className="sm:w-5/6 lg:w-3/4 mx-auto line-clamp-2 text-center">{nameUser}</h2>
           </div>
           <p className="sm:w-4/6 lg:w-3/5 mx-auto">
             {description ?? 'Bagi siswa dan guru yang tidak dapat menggunakan fitur biometrik dapat menggunakan fitur ini. Pastikan aktifasi lokasi sudah sesuai dengan area di sekolah.'}
           </p>
         </div>
 
-        {/* <Actions checkIn={In} checkOut={Out} roleUser={role} /> */}
-        <Actions checkIn={In} checkOut={Out} />
+        <Actions checkIn={In} checkOut={Out} roleUser={role} leave={Leave} />
       </div>
     </section>
   );

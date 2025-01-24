@@ -4,7 +4,7 @@ import { toast } from "sonner";
 export interface GeolocationData {
   latitude: number;
   longitude: number;
-  accuracy: number;
+  // accuracy: number;
 }
 
 /**
@@ -37,21 +37,21 @@ export function useGeolocation() {
       // latitude: locationData.latitude,
       // longitude: locationData.longitude
 
-      // Jarak 950 meter
-      // -7.195441280588343, 108.3622633807071
+      // jarak 490 meter
+      // -7.181890, 108.362298 : Berhasil
 
-      // Jarak 1 km
-      // -7.195890438230404, 108.362263
+      // Jarak 501 + meter
+      // -7.181793, 108.362298 : Gagal
 
-      // Jarak 1,1 km
-      // -7.176907, 108.362263
+      // jarak 600 meter
+      // -7.180893, 108.362298 : Gagal
 
       // * Untuk testing, kita langsung return koordinat yang diinginkan
       // const mockLocation = {
-      //   latitude: -7.195890438230404,
-      //   longitude: 108.362263,
-      //   accuracy: 10,
+      //   latitude: -7.181890,
+      //   longitude: 108.362298,
       // };
+
       // setLocation(mockLocation);
       // setIsLoading(false);
       // resolve(mockLocation);  
@@ -64,8 +64,6 @@ export function useGeolocation() {
           const { latitude, longitude, accuracy } = position.coords;
           const locationData = { latitude, longitude, accuracy };
     
-          console.log(location)
-          
           setLocation(locationData);
           setIsLoading(false);
           resolve(locationData);

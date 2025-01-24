@@ -15,14 +15,15 @@ const defaultStyle: ButtonVariantProps & { className: string } = {
 type Props = {
   checkIn: boolean,
   checkOut: boolean,
-  // typesLeave: []
+  leave: boolean
+  roleUser: string
 }
 
-export const Actions = ({ checkIn, checkOut }: Props): React.ReactElement => {
-  const { isLoading: isLoadingLocation, getLocation } = useGeolocation();
+export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props): React.ReactElement => {
+  const { getLocation, } = useGeolocation();
   const { mutate: CheckIn, isLoading: loadCheckIn } = useCheckIn();
   const { mutate: CheckOut, isLoading: loadChekOut } = useCheckOut();
-  const { onOpen, isOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpenChange, onClose } = useDisclosure();
 
   const handleAction = async (actionType: "checkin" | "checkout" | "leave") => {
     try {
@@ -54,30 +55,30 @@ export const Actions = ({ checkIn, checkOut }: Props): React.ReactElement => {
           onPress={() => handleAction("checkin")}
           color="primary"
           {...defaultStyle}
-          isDisabled={isLoadingLocation || loadCheckIn || checkIn}
+          isDisabled={loadCheckIn || checkIn || leave}
         >
-          {isLoadingLocation || loadCheckIn ? "Memproses..." : "Masuk"}
+          {loadCheckIn ? "Memproses..." : "Masuk"}
         </Button>
 
         <Button
           onPress={() => handleAction("checkout")}
           color="danger"
           {...defaultStyle}
-          isDisabled={isLoadingLocation || loadChekOut || checkOut}
+          isDisabled={loadChekOut || checkOut || leave}
         >
-          {isLoadingLocation || loadChekOut ? "Memproses..." : "Pulang"}
+          {loadChekOut ? "Memproses..." : "Pulang"}
         </Button>
         <Button
-          onPress={onOpen}
+          onPress={() => toast.info("Ups, Fitur masi dalam pengembangan")}
           color="warning"
           {...defaultStyle}
-          isDisabled={isLoadingLocation || loadChekOut}
+          isDisabled={checkIn || checkOut || leave}
         >
-          {isLoadingLocation || loadChekOut ? "Memproses..." : "Izin"}
+          Izin
         </Button>
       </div>
 
-      <ModalLeave open={isOpen} OpenChange={onOpenChange} />
+      <ModalLeave modal={{ open: isOpen, close: onClose, OpenChange: onOpenChange }} role={roleUser} />
     </>
   );
 };

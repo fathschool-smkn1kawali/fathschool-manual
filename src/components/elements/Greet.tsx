@@ -18,7 +18,8 @@ export const Greet = () => {
 
   return (
     <h2 className="sm:w-5/6 lg:w-3/4 mx-auto text-center">
-      Hello
+      Hello,{" "}
+      {SayHello()}
       <motion.span
         initial={waveAnimation.initial}
         animate={waveAnimation.animate}
@@ -26,7 +27,6 @@ export const Greet = () => {
       >
         👋
       </motion.span>
-      {SayHello()}
     </h2>
   );
 };

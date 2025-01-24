@@ -43,7 +43,7 @@ export default function Attendance(): React.ReactElement {
   if (loading) return <Loader/>
   
   return (
-    <main className="min-h-[600px]">
+    <main className="min-h-[700px]">
       <Hero
         actions={{ In: dataCheck?.data?.checkedin, Out: dataCheck?.data?.checkedout, Leave: dataCheck?.data?.leave }}
         greeting={{
