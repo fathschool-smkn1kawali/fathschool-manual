@@ -16,7 +16,7 @@ export function CheckGPS() {
         <div className="mt-4 text-center">
           <p>Latitude: {location.latitude}</p>
           <p>Longitude: {location.longitude}</p>
-          <p>Akurasi: {location.accuracy} meter</p>
+          {/* <p>Akurasi: {location.accuracy} meter</p> */}
         </div>
       )}
     </div>
