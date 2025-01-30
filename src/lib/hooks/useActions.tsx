@@ -134,14 +134,16 @@ function useLeave() {
       }
   
       const user = JSON.parse(userString);
-  
       const leavePayload = new FormData();
+
+      const startDate = new Date()
+
       leavePayload.append('user_id', user.id);
       leavePayload.append('title', payload.get('title') as string);
       leavePayload.append('leave_type_id', payload.get('leave_type_id') as string);
       leavePayload.append('description', payload.get('description') as string);
-      leavePayload.append('end', formatDate(new Date(payload.get('end') as string)));
-      leavePayload.append('start', formatDate(new Date()));
+      leavePayload.append('end', payload.get('end') as string);
+      leavePayload.append('start', formatDate(startDate));
       if (payload.get('image')) {
         leavePayload.append('image', payload.get('image') as File);
       }

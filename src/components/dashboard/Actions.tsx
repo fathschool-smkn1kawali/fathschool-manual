@@ -23,7 +23,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props): React.Re
   const { getLocation, } = useGeolocation();
   const { mutate: CheckIn, isLoading: loadCheckIn } = useCheckIn();
   const { mutate: CheckOut, isLoading: loadChekOut } = useCheckOut();
-  const { isOpen, onOpenChange, onClose } = useDisclosure();
+  const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
 
   const handleAction = async (actionType: "checkin" | "checkout" | "leave") => {
     try {
@@ -69,7 +69,8 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props): React.Re
           {loadChekOut ? "Memproses..." : "Pulang"}
         </Button>
         <Button
-          onPress={() => toast.info("Ups, Fitur masi dalam pengembangan")}
+          // onPress={() => toast.info("Ups, Fitur masi dalam pengembangan")}
+          onPress={() => onOpen()}
           color="warning"
           {...defaultStyle}
           isDisabled={checkIn || checkOut || leave}
