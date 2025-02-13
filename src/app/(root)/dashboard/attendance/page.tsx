@@ -15,10 +15,16 @@ import { useEffect, useState } from "react";
 export default function Attendance(): React.ReactElement {
   const { data: dataSettings } = useGetSettings();
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<{ name: string; id: number, role: string } | null>(null);
+  const [user, setUser] = useState<{
+    name: string;
+    id: number;
+    role: string;
+  } | null>(null);
 
   // Check if user is logged in
-  const { data: dataCheck } = useCheckById(user?.id ? user.id.toString() : null);
+  const { data: dataCheck } = useCheckById(
+    user?.id ? user.id.toString() : null
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,7 +33,8 @@ export default function Attendance(): React.ReactElement {
         const userData = localStorage.getItem("user");
         const parsedUser = userData ? JSON.parse(userData) : null;
 
-        if (!parsedUser) {
+        if (!parsedUser || typeof parsedUser.role !== "string") {
+          localStorage.removeItem("user"); // Hapus localStorage agar user login ulang
           window.location.href = "/";
           return;
         }
@@ -40,14 +47,18 @@ export default function Attendance(): React.ReactElement {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) return <Loader/>
-  
+  if (loading) return <Loader />;
+
   return (
     <main className="min-h-[700px]">
       <Hero
-        actions={{ In: dataCheck?.data?.checkedin, Out: dataCheck?.data?.checkedout, Leave: dataCheck?.data?.leave }}
+        actions={{
+          In: dataCheck?.data?.checkedin,
+          Out: dataCheck?.data?.checkedout,
+          Leave: dataCheck?.data?.leave,
+        }}
         greeting={{
-          role: user?.role ?? "Admin", 
+          role: user?.role ?? "Admin",
           nameUser: capitalizeWords(user?.name ?? "User"),
           description: dataSettings?.data.data.mobile_settings.conclusion_apps,
         }}
