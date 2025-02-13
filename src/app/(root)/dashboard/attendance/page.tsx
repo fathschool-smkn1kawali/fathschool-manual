@@ -24,27 +24,60 @@ export default function Attendance(): React.ReactElement {
 
   // Check if user is logged in
   const { data: dataCheck } = useCheckById(
-    user?.id ? user.id.toString() : null
+    user?.id ? user?.id.toString() : null
   );
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (typeof window !== "undefined") {
+  //       try {
+  //         const userData = localStorage.getItem("user");
+  //         const parsedUser = userData ? JSON.parse(userData) : null;
+
+  //         if (!parsedUser || typeof parsedUser.role !== "string") {
+  //           localStorage.removeItem("user");
+  //           toast.info('Mohon Login Terlebih Dahulu');
+  //           window.location.href = "/";
+  //           return;
+  //         }
+
+  //         setUser(parsedUser);
+  //       } catch (error) {
+  //         console.log(error)
+  //         localStorage.removeItem("user");
+  //         toast.error("Terjadi kesalahan. Silakan login kembali.");
+  //         window.location.href = "/";
+  //       }
+  //     }
+  //     setLoading(false);
+  //   }, 1200);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Pastikan kode hanya berjalan di browser
       if (typeof window !== "undefined") {
-        const userData = localStorage.getItem("user");
-        const parsedUser = userData ? JSON.parse(userData) : null;
-
-        if (!parsedUser || typeof parsedUser.role !== "string") {
-          localStorage.removeItem("user"); // Hapus localStorage agar user login ulang
+        try {
+          const userData = localStorage.getItem("user");
+          if (!userData) {
+            localStorage.removeItem("user");
+            toast.info("Mohon Login Terlebih Dahulu");
+            window.location.href = "/";
+            return;
+          } else {
+            const parsedUser = JSON.parse(userData); // Parse user data
+            setUser(parsedUser); // Set user state jika data valid
+          }
+        } catch (error) {
+          console.error("Error checking user in localStorage:", error);
+          localStorage.removeItem("user");
+          toast.error("Terjadi kesalahan. Silakan login kembali.");
           window.location.href = "/";
-          toast.info('Mohon Login Terlebih Dahulu');
-          return;
         }
-
-        setUser(parsedUser);
       }
       setLoading(false);
-    }, 1200);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, []);

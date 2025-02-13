@@ -56,20 +56,16 @@ export const Hero = ({
               startContent={<Icons.Info />}
               {...styleDefault}
               color={
-                Leave === "pending"
-                  ? "warning"
-                  : Leave === "accepted"
-                  ? "success"
-                  : !In && !Out
-                  ? "danger"
-                  : "success" 
+                Leave === "pending" ? "warning" : Leave === "accepted" ? "success" : !In && !Out ? "danger" : "success"
               }
             >
               {Leave === "pending" && "Menunggu Persetujuan"}
               {Leave === "accepted" && "Izin Disetujui"}
-              {Leave === "rejected" && In && !Out && "Anda sudah Check In"}{" "}
-              {Leave === "rejected" && In && Out && "Anda sudah Check Out"}{" "}
-              {Leave === "rejected" && !In && !Out && "Belum Check In"}{" "}
+              
+              {Leave === "rejected" && In && !Out && "Anda sudah Check In"}
+              {Leave === "rejected" && In && Out && "Anda sudah Check Out"}
+              {Leave === "rejected" && !In && !Out && "Belum Check In"}
+
               {Leave === "none" && In && !Out && "Anda sudah Check In"}
               {Leave === "none" && In && Out && "Anda sudah Check Out"}
               {Leave === "none" && !In && !Out && "Belum Check In"}
