@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/navbar";
 import {
   Button,
+  Image,
   Modal,
   ModalBody,
   ModalContent,
@@ -18,7 +19,6 @@ import {
 } from "@nextui-org/react";
 import { toast } from "sonner";
 import { Buttons } from "../fragments/Buttons";
-import Image from "next/image";
 
 /**
  * NavBar component that displays a greeting and user controls.
@@ -42,8 +42,7 @@ export const NavBar: React.FC = (): React.ReactElement => {
           <Image
             src={Images.SmknKawali.src}
             alt="logo"
-            width={50}
-            height={50}
+            className="max-h-8 max-w-8 md:max-w-12 md:max-h-12"
           />
           <h5 className="hidden sm:block">SMKN 1 Kawali</h5>
         </NavbarBrand>
