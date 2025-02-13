@@ -6,6 +6,7 @@ import { useCheckById } from "@/lib/hooks/useActions";
 import { useGetSettings } from "@/lib/hooks/useGetSettings";
 import { capitalizeWords } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 /**
  * * This is a strongly typed React Functional Component that renders a dashboard attendance page.
@@ -36,6 +37,7 @@ export default function Attendance(): React.ReactElement {
         if (!parsedUser || typeof parsedUser.role !== "string") {
           localStorage.removeItem("user"); // Hapus localStorage agar user login ulang
           window.location.href = "/";
+          toast.info('Mohon Login Terlebih Dahulu');
           return;
         }
 
