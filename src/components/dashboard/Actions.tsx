@@ -15,16 +15,21 @@ const defaultStyle: ButtonVariantProps & { className: string } = {
 type Props = {
   checkIn: boolean,
   checkOut: boolean,
-  leave: boolean
+  leave: string
   roleUser: string
 }
 
 export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props): React.ReactElement => {
-  const { getLocation, } = useGeolocation();
-  const { mutate: CheckIn, isLoading: loadCheckIn } = useCheckIn();
-  const { mutate: CheckOut, isLoading: loadChekOut } = useCheckOut();
+  const { getLocation } = useGeolocation();
+  const { In, loadIn } = useCheckIn();
+  const { Out, loadOut } = useCheckOut();
   const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
 
+  /**
+   * Handle action from user, whether it's checkin, checkout, or leave.
+   * @param {string} actionType - The type of action to be performed.
+   * @returns {Promise<void>}
+   */
   const handleAction = async (actionType: "checkin" | "checkout" | "leave") => {
     try {
       const locationData = await getLocation();
@@ -32,12 +37,12 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props): React.Re
       if (!locationData) return;
 
       if (actionType === "checkin") {
-        CheckIn({
+        In({
           latitude: locationData.latitude,
           longitude: locationData.longitude,
         });
-      } else if (actionType === "checkout")  {
-        CheckOut({
+      } else if (actionType === "checkout") {
+        Out({
           latitude: locationData.latitude,
           longitude: locationData.longitude,
         });
@@ -48,32 +53,40 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props): React.Re
     }
   };
 
+  // Kondisi disable button
+  const isCheckInDisabled = checkIn || checkOut || leave === "accepted" || leave === "pending";
+  const isCheckOutDisabled = !checkIn || checkOut || leave === "accepted" || leave === "pending";
+  const isLeaveDisabled = checkIn || checkOut || leave === "accepted" || leave === "pending";
+
   return (
     <>
       <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
+        {/* Tombol Check-in */}
         <Button
           onPress={() => handleAction("checkin")}
           color="primary"
           {...defaultStyle}
-          isDisabled={loadCheckIn || checkIn || leave}
+          isDisabled={isCheckInDisabled}
         >
-          {loadCheckIn ? "Memproses..." : "Masuk"}
+          {loadIn ? "Memproses..." : "Masuk"}
         </Button>
 
+        {/* Tombol Check-out */}
         <Button
           onPress={() => handleAction("checkout")}
           color="danger"
           {...defaultStyle}
-          isDisabled={loadChekOut || checkOut || leave}
+          isDisabled={isCheckOutDisabled}
         >
-          {loadChekOut ? "Memproses..." : "Pulang"}
+          {loadOut ? "Memproses..." : "Pulang"}
         </Button>
+
+        {/* Tombol Izin */}
         <Button
-          // onPress={() => toast.info("Ups, Fitur masi dalam pengembangan")}
           onPress={() => onOpen()}
           color="warning"
           {...defaultStyle}
-          isDisabled={checkIn || checkOut || leave}
+          isDisabled={isLeaveDisabled}
         >
           Izin
         </Button>

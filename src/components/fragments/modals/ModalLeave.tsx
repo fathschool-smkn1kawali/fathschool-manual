@@ -24,7 +24,7 @@ interface ITypeLeave {
 export const ModalLeave = ({ modal: {open, OpenChange, close}, role }: Props): React.ReactElement => {
   const { data: leaveTypes, isLoading } = useLeaveTypes(role === 'Administration' ? 'staff' : role ?? '');
   const { mutate, isLoading: isLoadingLeave } = useLeave()
-  const { register, handleSubmit, formState: { errors } } = useForm<TypeLeaveSchema>({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<TypeLeaveSchema>({
     mode: "all",
     resolver: zodResolver(leaveSchema),
   });
@@ -39,7 +39,9 @@ export const ModalLeave = ({ modal: {open, OpenChange, close}, role }: Props): R
       formData.append('image', data.image[0]); // Mengambil file pertama dari input type="file"
     }
 
-    mutate(formData);
+    mutate(formData, {
+      onError: () => reset(),
+    });
     close()
   };
   

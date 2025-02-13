@@ -46,7 +46,7 @@ function useLogin(): UseMutationResult<AxiosResponse, unknown, TypeLoginSchema, 
     },
     onError: (error: AxiosError) => {
       const status = (error?.response?.data as { status: number })?.status || 500
-      const statusText = status === 403 ? 'Akun tidak memiliki akses untuk fitur ini' : status === 404 ? 'User tidak ditemukan' : status === 401 ? 'Password salah' : 'Terjadi kesalahan pada server'
+      const statusText = status === 403 ? 'Akun tidak memiliki akses untuk fitur ini' : status === 404 ? 'User tidak ditemukan' : status === 401 ? 'Password Salah' : 'Terjadi kesalahan pada server'
       
       toast.error(statusText) 
     }

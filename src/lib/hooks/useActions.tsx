@@ -19,7 +19,8 @@ function useCheckById(id: string | null) {
 
   return useQuery({
     queryKey: ['checkById', id],
-    refetchInterval: 10000, // Refetch every 10 seconds
+    // refetchInterval: 10000, // Refetch every 10 seconds
+    enabled: !!id,
     queryFn: async () => axios.get(url),
     onError: (error) => console.error("Error fetching check data:", error),
   })
@@ -37,7 +38,12 @@ function useCheckIn() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/checkinManual`
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const userString = localStorage.getItem("user");
+  const user = JSON.parse(userString!);
+  const id = user.id
+  const { refetch } = useCheckById(id)
+
+  const { mutate, isLoading} = useMutation({
     mutationFn: async (data: CheckLocation) => {
 
       const userString = localStorage.getItem("user");
@@ -63,10 +69,16 @@ function useCheckIn() {
     },
     onSuccess: () => {
       // window.location.href = "/dashboard/attendance";
-      queryClient.invalidateQueries(["checkById"]);
+      refetch();
+      queryClient.invalidateQueries('checkById');
       toast.success("Check In Berhasil")
     },
   });
+
+  return {
+    In: mutate,
+    loadIn: isLoading
+  }
 }
 
 
@@ -81,7 +93,12 @@ function useCheckOut() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/checkoutManual`
   const queryClient = useQueryClient();
 
-  return useMutation({
+  const userString = localStorage.getItem("user");
+  const user = JSON.parse(userString!);
+  const id = user.id
+  const { refetch } = useCheckById(id)
+
+  const { mutate, isLoading } =  useMutation({
     mutationFn: async (data: CheckLocation) => {
       const userString = localStorage.getItem("user");
       if (!userString) {
@@ -105,18 +122,37 @@ function useCheckOut() {
     },
     onSuccess: () => {
       // window.location.href = "/dashboard/attendance";
-      queryClient.invalidateQueries(["checkById"]);
+      refetch();
+      queryClient.invalidateQueries('checkById');
       toast.success("Check Out Berhasil")
     },
   });
+
+  return {
+    Out: mutate,
+    loadOut: isLoading
+  }
 }
 
 
 
 
+/**
+ * Hook to submit a leave request. This function will send a POST request to the server
+ * with the given data and return the response. If the request is successful, it will
+ * invalidate the cache for the "checkById" query and show a success toast. If the
+ * request fails, it will show an error toast.
+ *
+ * @returns {UseMutationResult<AxiosResponse, AxiosError, FormData, unknown>} The result of the mutation.
+ */
 function useLeave() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/leaveManual`;
   const queryClient = useQueryClient();
+
+  const userString = localStorage.getItem("user");
+  const user = JSON.parse(userString!);
+  const id = user.id
+  const { refetch } = useCheckById(id)
 
   // Helper function to format date as YYYY-MM-DD
   const formatDate = (date: Date): string => {
@@ -155,11 +191,12 @@ function useLeave() {
       });
     },
     onError: (error: AxiosError) => {
-      console.log(error);
-      toast.error("Terjadi Kesalahan pada Server");
+      const status = (error?.response?.data as { status: number })?.status || 500
+      toast.error(status === 400 ? 'Anda Sudah Mengajukan Izin' : status === 404 ? 'User Tidak Ditemukan' : 'Terjadi Kesalahan pada Server');
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["checkById"]);
+      refetch();
+      queryClient.invalidateQueries('checkById');
       toast.success("Anda Berhasil Mengajukan Izin");
     },
   });
@@ -169,6 +206,13 @@ function useLeave() {
 
 
 
+/**
+ * Fetches the list of leave types for the given role type.
+ *
+ * @param {string} roleType The role type to fetch the leave types for.
+ *
+ * @returns {UseQueryResult<AxiosResponse, AxiosError>} The result of the query.
+ */
 function useLeaveTypes(roleType: string) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/leave-types/${roleType}`;
 

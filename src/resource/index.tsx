@@ -1,7 +1,7 @@
-import ImageSchool from "/public/bg.jpeg";
-import SmknKawali from "/public/Logo.png";
-import FathSchoolLight from "/public/FathSchool Light.png";
-import FathSchoolDark from "/public/FathSchool Dark.png";
+import ImageSchool from "../../public/bg.jpeg";
+import SmknKawali from "../../public/Logo.png";
+import FathSchoolLight from "../../public/FathSchool Light.png";
+import FathSchoolDark from "../../public/FathSchool Dark.png";
 
 export const Images = {
   ImageSchool,
