@@ -79,7 +79,7 @@ export const Actions = ({
             {...defaultStyle}
             isDisabled={isCheckInDisabled}
           >
-            {loadIn ? "Memproses..." : "Masuk"}
+            {loadIn ? "Memproses..." : "Datang"}
           </Button>
 
           {/* Tombol Check-out */}
@@ -107,12 +107,12 @@ export const Actions = ({
         <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
           {/* Tombol Check-in Tambahan */}
           <Button color="success" {...defaultStyle}>
-            Check In
+            Masuk
           </Button>
 
           {/* Tombol Check-out Tambahan */}
           <Button color="secondary" {...defaultStyle}>
-            Check Out
+            Keluar
           </Button>
         </div>
       </div>
