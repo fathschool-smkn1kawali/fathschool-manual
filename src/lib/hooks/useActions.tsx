@@ -7,6 +7,11 @@ type CheckLocation = {
   longitude: number;
 };
 
+type QrData = {
+  qr_code_id: string;
+  latitude: number;
+  longitude: number;
+};
 /**
  * * Fetches the checkin status of a user with the given ID, if given.
  *
@@ -25,8 +30,6 @@ function useCheckById(id: string | null) {
     onError: (error) => console.error("Error fetching check data:", error),
   })
 }
-
-
 
 /**
  *  * Logs in a user using the provided login credentials.
@@ -81,8 +84,6 @@ function useCheckIn() {
   }
 }
 
-
-
 /**
  * * Hook to check out the user using the provided location.
  *
@@ -133,8 +134,6 @@ function useCheckOut() {
     loadOut: isLoading
   }
 }
-
-
 
 
 /**
@@ -203,9 +202,6 @@ function useLeave() {
   
 }
 
-
-
-
 /**
  * Fetches the list of leave types for the given role type.
  *
@@ -224,7 +220,100 @@ function useLeaveTypes(roleType: string) {
   });
 }
 
+function useQrin() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/qrinManual`;
+  const queryClient = useQueryClient();
+  
+  const { mutate, isLoading } = useMutation({
+    mutationFn: async (data: QrData) => {
+      const userString = localStorage.getItem("user");
+      if (!userString) {
+        throw new Error("User not found in localStorage");
+      }
+
+      const user = JSON.parse(userString);
+
+      const payload = {
+        user_id: user.id, // Kirim user ID
+        qr_code_id: data.qr_code_id,
+        latitude: data.latitude,
+        longitude: data.longitude,
+      };
+
+      return axios.post(url, payload);
+    },
+    onError: (error: AxiosError) => {
+      const status = (error?.response?.data as { status: number })?.status || 500;
+      const statusText =
+        status === 400 ? "Anda sudah check-in" :
+        status === 403 ? "Anda berada di luar jangkauan" :
+        status === 404 ? "QR Code tidak ditemukan" :
+        "Terjadi kesalahan pada server";
+
+      console.error("Qrin Error:", error);
+      toast.error(statusText);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("attendance");
+      toast.success("Qrin Berhasil");
+    },
+  });
+
+  return {
+    Qrin: mutate,
+    loadQrin: isLoading,
+  };
+}
+
+function useQrout() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL?.toString()}/qroutManual`;
+  const queryClient = useQueryClient();
+  
+  const { mutate, isLoading } = useMutation({
+    mutationFn: async (data: QrData) => {
+      const userString = localStorage.getItem("user");
+      if (!userString) {
+        throw new Error("User not found in localStorage");
+      }
+
+      const user = JSON.parse(userString);
+
+      const payload = {
+        user_id: user.id, // Kirim user ID
+        qr_code_id: data.qr_code_id,
+        latitude: data.latitude,
+        longitude: data.longitude,
+      };
+
+      return axios.post(url, payload);
+    },
+    onError: (error: AxiosError) => {
+      const status = (error?.response?.data as { status: number })?.status || 500;
+      const statusText =
+        status === 400 ? "Anda sudah check-out" :
+        status === 403 ? "Anda berada di luar jangkauan" :
+        status === 404 ? "QR Code tidak ditemukan" :
+        "Terjadi kesalahan pada server";
+
+      console.error("Qrout Error:", error);
+      toast.error(statusText);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("attendance");
+      toast.success("Qrout Berhasil");
+    },
+  });
+
+  return {
+    Qrout: mutate,
+    loadQrout: isLoading,
+  };
+}
+
+
 export {
+  useQrin,
+  useQrout,
   useCheckIn,
   useCheckOut,
   useLeave,

@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     "Sekolah Terbaik",
     "SMK Unggulan",
   ],
-  viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
   openGraph: {
     title: "SMKN 1 Kawali - Sekolah Menengah Kejuruan Unggulan",
     description:
@@ -39,15 +38,23 @@ export const metadata: Metadata = {
   },
 };
 
+// Pindahkan viewport ke generateViewport
+export const generateViewport = () => ({
+  width: "device-width",
+  initialScale: 1.0,
+  maximumScale: 1.0,
+  userScalable: "no",
+});
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="id">
       <body className={`${inter.className} ${inter.variable} antialiased`}>
         {children}
       </body>
     </html>
   );
 }
+
