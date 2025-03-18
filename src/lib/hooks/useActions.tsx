@@ -245,8 +245,8 @@ function useQrin() {
     onError: (error: AxiosError) => {
       const status = (error?.response?.data as { status: number })?.status || 500;
       const statusText =
-        status === 400 ? "Anda sudah check-in" :
-        status === 403 ? "Anda berada di luar jangkauan" :
+        status === 400 ? "Anda tidak memiliki jadwal" :
+        status === 403 ? "Anda berada di luar radius yang diizinkan" :
         status === 404 ? "QR Code tidak ditemukan" :
         "Terjadi kesalahan pada server";
 

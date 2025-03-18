@@ -44,9 +44,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
   const { onOpen, isOpen, onOpenChange, onClose } = useDisclosure();
 
   const [qrScannerOpen, setQrScannerOpen] = useState(false);
-  const [scanActionType, setScanActionType] = useState<"qrin" | "qrout">(
-    "qrin"
-  );
+  const [scanMode, setScanMode] = useState<"qrin" | "qrout" | null>(null);
   const scannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -68,39 +66,26 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
     }
   }, [qrScannerOpen]);
 
-  const handleAction = async (
-    actionType: "checkin" | "checkout" | "qrin" | "qrout",
-    qrCodeId?: string
-  ) => {
+  const handleAction = async (actionType: "checkin" | "checkout") => {
     try {
       const locationData = await getLocation();
       if (!locationData) return;
 
       if (actionType === "checkin") {
-        In({
+        await In({
           latitude: locationData.latitude,
           longitude: locationData.longitude,
         });
+        toast.success("Berhasil Check-in");
       } else if (actionType === "checkout") {
-        Out({
+        await Out({
           latitude: locationData.latitude,
           longitude: locationData.longitude,
         });
-      } else if (actionType === "qrin" && qrCodeId) {
-        Qrin({
-          qr_code_id: qrCodeId,
-          latitude: locationData.latitude,
-          longitude: locationData.longitude,
-        });
-      } else if (actionType === "qrout" && qrCodeId) {
-        Qrout({
-          qr_code_id: qrCodeId,
-          latitude: locationData.latitude,
-          longitude: locationData.longitude,
-        });
+        toast.success("Berhasil Check-out");
       }
     } catch (error) {
-      toast.error("Terjadi kesalahan saat memproses aksi");
+      toast.error("Terjadi kesalahan saat memproses aksi.");
     }
   };
 
@@ -119,12 +104,52 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
     } catch {}
 
     setQrScannerOpen(false);
-    handleAction(scanActionType, qrCodeId);
+
+    if (scanMode === "qrin") {
+      handleActionQrin(qrCodeId);
+    } else if (scanMode === "qrout") {
+      handleActionQrout(qrCodeId);
+    }
+  };
+
+  const handleActionQrin = async (qrCodeId: string) => {
+    try {
+      const locationData = await getLocation();
+      if (!locationData) return;
+
+      await Qrin({
+        qr_code_id: qrCodeId,
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+      });
+
+      toast.success("Berhasil Check-in dengan QR");
+    } catch (error) {
+      toast.error("Terjadi kesalahan saat check-in.");
+    }
+  };
+
+  const handleActionQrout = async (qrCodeId: string) => {
+    try {
+      const locationData = await getLocation();
+      if (!locationData) return;
+
+      await Qrout({
+        qr_code_id: qrCodeId,
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+      });
+
+      toast.success("Berhasil Check-out dengan QR");
+    } catch (error) {
+      toast.error("Terjadi kesalahan saat check-out.");
+    }
   };
 
   return (
     <>
       <div className="flex flex-col items-center gap-2 sm:gap-4">
+        {/* Tombol Check-in, Check-out, dan Izin */}
         <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
           <Button
             onPress={() => handleAction("checkin")}
@@ -154,33 +179,43 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
           </Button>
         </div>
 
-        <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
-          {/* Tombol Masuk QR */}
-          <Button
-            color="success"
-            {...defaultStyle}
-            onPress={() => {
-              setScanActionType("qrin"); // Set scanActionType ke "qrin"
-              setQrScannerOpen(true); // Buka modal scanner
-            }}
-            isDisabled={scanActionType === "qrin" || scanActionType === "qrout"} // Jika sudah qrin atau qrout, tombol disabled
-          >
-            {loadQrin ? "Memproses..." : "Masuk QR"}
-          </Button>
+        {roleUser?.toLowerCase() === "teacher" && (
+          <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
+            <Button
+              color="success"
+              {...defaultStyle}
+              onPress={() => {
+                setScanMode("qrin");
+                setQrScannerOpen(true);
+              }}
+              isDisabled={
+                checkIn ||
+                checkOut ||
+                leave === "accepted" ||
+                leave === "pending"
+              }
+            >
+              {loadQrin ? "Memproses..." : "Masuk QR"}
+            </Button>
 
-          {/* Tombol Keluar QR */}
-          <Button
-            color="secondary"
-            {...defaultStyle}
-            onPress={() => {
-              setScanActionType("qrout"); // Set scanActionType ke "qrout"
-              setQrScannerOpen(true); // Buka modal scanner
-            }}
-            isDisabled={scanActionType !== "qrin" || scanActionType === "qrout"} // Jika belum qrin atau sudah qrout, tombol disabled
-          >
-            {loadQrout ? "Memproses..." : "Keluar QR"}
-          </Button>
-        </div>
+            <Button
+              color="secondary"
+              {...defaultStyle}
+              onPress={() => {
+                setScanMode("qrout");
+                setQrScannerOpen(true);
+              }}
+              isDisabled={
+                !checkIn ||
+                checkOut ||
+                leave === "accepted" ||
+                leave === "pending"
+              }
+            >
+              {loadQrout ? "Memproses..." : "Keluar QR"}
+            </Button>
+          </div>
+        )}
       </div>
 
       <ModalLeave
@@ -195,7 +230,11 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
       >
         <ModalContent>
           <ModalHeader>
-            Scan QR untuk {scanActionType === "qrin" ? "Masuk" : "Keluar"}
+            {scanMode === "qrin"
+              ? "Scan QR untuk Masuk"
+              : scanMode === "qrout"
+              ? "Scan QR untuk Keluar"
+              : "Scan QR"}
           </ModalHeader>
           <ModalBody>
             <div id="qr-scanner" ref={scannerRef}></div>
