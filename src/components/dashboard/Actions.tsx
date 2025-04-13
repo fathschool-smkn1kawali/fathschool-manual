@@ -47,39 +47,45 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
   const [scanMode, setScanMode] = useState<"qrin" | "qrout" | null>(null);
   const scannerRef = useRef<HTMLDivElement>(null);
 
-  const handleActionQrin = async (qrCodeId: string) => {
-    try {
-      const locationData = await getLocation();
-      if (!locationData) return;
+  const handleActionQrin = useCallback(
+    async (qrCodeId: string) => {
+      try {
+        const locationData = await getLocation();
+        if (!locationData) return;
 
-      await Qrin({
-        qr_code_id: qrCodeId,
-        latitude: locationData.latitude,
-        longitude: locationData.longitude,
-      });
+        await Qrin({
+          qr_code_id: qrCodeId,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+        });
 
-      toast.success("Berhasil Check-in dengan QR");
-    } catch {
-      toast.error("Terjadi kesalahan saat check-in.");
-    }
-  };
+        toast.success("Berhasil Check-in dengan QR");
+      } catch {
+        toast.error("Terjadi kesalahan saat check-in.");
+      }
+    },
+    [getLocation, Qrin]
+  );
 
-  const handleActionQrout = async (qrCodeId: string) => {
-    try {
-      const locationData = await getLocation();
-      if (!locationData) return;
+  const handleActionQrout = useCallback(
+    async (qrCodeId: string) => {
+      try {
+        const locationData = await getLocation();
+        if (!locationData) return;
 
-      await Qrout({
-        qr_code_id: qrCodeId,
-        latitude: locationData.latitude,
-        longitude: locationData.longitude,
-      });
+        await Qrout({
+          qr_code_id: qrCodeId,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+        });
 
-      toast.success("Berhasil Check-out dengan QR");
-    } catch {
-      toast.error("Terjadi kesalahan saat check-out.");
-    }
-  };
+        toast.success("Berhasil Check-out dengan QR");
+      } catch {
+        toast.error("Terjadi kesalahan saat check-out.");
+      }
+    },
+    [getLocation, Qrout]
+  );
 
   const handleScan = useCallback(
     (data: { text?: string } | null) => {
@@ -119,10 +125,10 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
       scanner.render(
         (decodedText) => {
           handleScan({ text: decodedText });
-          scanner.clear();
         },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        (_) => console.warn("QR Scan Error")
+        () => {
+          console.warn("QR Scan Error");
+        }
       );
 
       return () => {
@@ -157,7 +163,6 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
   return (
     <>
       <div className="flex flex-col items-center gap-2 sm:gap-4">
-        {/* Tombol Check-in, Check-out, dan Izin */}
         <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
           <Button
             onPress={() => handleAction("checkin")}
@@ -203,7 +208,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
                 leave === "pending"
               }
             >
-              {loadQrin ? "Memproses..." : "Masuk QR"}
+              {loadQrin ? "Memproses..." : "Masuk QR."}
             </Button>
 
             <Button
