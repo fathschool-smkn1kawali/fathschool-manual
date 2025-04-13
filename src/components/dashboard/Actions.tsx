@@ -18,7 +18,7 @@ import {
   ModalBody,
 } from "@nextui-org/react";
 import { toast } from "sonner";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
 const defaultStyle: ButtonVariantProps & { className: string } = {
@@ -47,6 +47,34 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
   const [scanMode, setScanMode] = useState<"qrin" | "qrout" | null>(null);
   const scannerRef = useRef<HTMLDivElement>(null);
 
+  const handleScan = useCallback(
+    (data: { text?: string } | null) => {
+      if (!data || !data.text) {
+        toast.error("QR Code tidak valid atau tidak terbaca.");
+        return;
+      }
+
+      let qrCodeId = data.text;
+      try {
+        const parsedData = JSON.parse(data.text);
+        if (parsedData?.qr_code_id) {
+          qrCodeId = parsedData.qr_code_id;
+        }
+      } catch {
+        // QR Code dalam bentuk string biasa
+      }
+
+      setQrScannerOpen(false);
+
+      if (scanMode === "qrin") {
+        handleActionQrin(qrCodeId);
+      } else if (scanMode === "qrout") {
+        handleActionQrout(qrCodeId);
+      }
+    },
+    [scanMode]
+  );
+
   useEffect(() => {
     if (qrScannerOpen) {
       const scanner = new Html5QrcodeScanner("qr-scanner", {
@@ -62,9 +90,11 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
         (error) => console.warn("QR Scan Error:", error)
       );
 
-      return () => scanner.clear();
+      return () => {
+        scanner.clear().catch(() => {});
+      };
     }
-  }, [qrScannerOpen]);
+  }, [qrScannerOpen, handleScan]);
 
   const handleAction = async (actionType: "checkin" | "checkout") => {
     try {
@@ -84,31 +114,8 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
         });
         toast.success("Berhasil Check-out");
       }
-    } catch (error) {
+    } catch (_) {
       toast.error("Terjadi kesalahan saat memproses aksi.");
-    }
-  };
-
-  const handleScan = (data: { text?: string } | null) => {
-    if (!data || !data.text) {
-      toast.error("QR Code tidak valid atau tidak terbaca.");
-      return;
-    }
-
-    let qrCodeId = data.text;
-    try {
-      const parsedData = JSON.parse(data.text);
-      if (parsedData?.qr_code_id) {
-        qrCodeId = parsedData.qr_code_id;
-      }
-    } catch {}
-
-    setQrScannerOpen(false);
-
-    if (scanMode === "qrin") {
-      handleActionQrin(qrCodeId);
-    } else if (scanMode === "qrout") {
-      handleActionQrout(qrCodeId);
     }
   };
 
@@ -124,7 +131,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
       });
 
       toast.success("Berhasil Check-in dengan QR");
-    } catch (error) {
+    } catch (_) {
       toast.error("Terjadi kesalahan saat check-in.");
     }
   };
@@ -141,7 +148,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
       });
 
       toast.success("Berhasil Check-out dengan QR");
-    } catch (error) {
+    } catch (_) {
       toast.error("Terjadi kesalahan saat check-out.");
     }
   };
@@ -179,7 +186,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
           </Button>
         </div>
 
-        {roleUser?.toLowerCase() === "teacher" && (
+        {roleUser?.trim().toLowerCase() === "teacher" && (
           <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
             <Button
               color="success"
