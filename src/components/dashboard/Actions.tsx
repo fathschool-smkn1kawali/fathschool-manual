@@ -47,6 +47,40 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
   const [scanMode, setScanMode] = useState<"qrin" | "qrout" | null>(null);
   const scannerRef = useRef<HTMLDivElement>(null);
 
+  const handleActionQrin = async (qrCodeId: string) => {
+    try {
+      const locationData = await getLocation();
+      if (!locationData) return;
+
+      await Qrin({
+        qr_code_id: qrCodeId,
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+      });
+
+      toast.success("Berhasil Check-in dengan QR");
+    } catch {
+      toast.error("Terjadi kesalahan saat check-in.");
+    }
+  };
+
+  const handleActionQrout = async (qrCodeId: string) => {
+    try {
+      const locationData = await getLocation();
+      if (!locationData) return;
+
+      await Qrout({
+        qr_code_id: qrCodeId,
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+      });
+
+      toast.success("Berhasil Check-out dengan QR");
+    } catch {
+      toast.error("Terjadi kesalahan saat check-out.");
+    }
+  };
+
   const handleScan = useCallback(
     (data: { text?: string } | null) => {
       if (!data || !data.text) {
@@ -72,7 +106,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
         handleActionQrout(qrCodeId);
       }
     },
-    [scanMode]
+    [scanMode, handleActionQrin, handleActionQrout]
   );
 
   useEffect(() => {
@@ -87,7 +121,8 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
           handleScan({ text: decodedText });
           scanner.clear();
         },
-        (error) => console.warn("QR Scan Error:", error)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (_) => console.warn("QR Scan Error")
       );
 
       return () => {
@@ -114,42 +149,8 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
         });
         toast.success("Berhasil Check-out");
       }
-    } catch (_) {
+    } catch {
       toast.error("Terjadi kesalahan saat memproses aksi.");
-    }
-  };
-
-  const handleActionQrin = async (qrCodeId: string) => {
-    try {
-      const locationData = await getLocation();
-      if (!locationData) return;
-
-      await Qrin({
-        qr_code_id: qrCodeId,
-        latitude: locationData.latitude,
-        longitude: locationData.longitude,
-      });
-
-      toast.success("Berhasil Check-in dengan QR");
-    } catch (_) {
-      toast.error("Terjadi kesalahan saat check-in.");
-    }
-  };
-
-  const handleActionQrout = async (qrCodeId: string) => {
-    try {
-      const locationData = await getLocation();
-      if (!locationData) return;
-
-      await Qrout({
-        qr_code_id: qrCodeId,
-        latitude: locationData.latitude,
-        longitude: locationData.longitude,
-      });
-
-      toast.success("Berhasil Check-out dengan QR");
-    } catch (_) {
-      toast.error("Terjadi kesalahan saat check-out.");
     }
   };
 
