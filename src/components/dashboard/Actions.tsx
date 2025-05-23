@@ -23,7 +23,7 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 
 const defaultStyle: ButtonVariantProps & { className: string } = {
   size: "lg",
-  variant: "shadow" as const,
+  variant: "shadow",
   className:
     "px-10 py-2 text-medium md:px-16 sm:py-3.5 text-white font-semibold",
 };
@@ -89,7 +89,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
 
   const handleScan = useCallback(
     (data: { text?: string } | null) => {
-      if (!data || !data.text) {
+      if (!data?.text) {
         toast.error("QR Code tidak valid atau tidak terbaca.");
         return;
       }
@@ -101,7 +101,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
           qrCodeId = parsedData.qr_code_id;
         }
       } catch {
-        // QR Code dalam bentuk string biasa
+        // QR Code bukan format JSON, gunakan langsung
       }
 
       setQrScannerOpen(false);
@@ -115,27 +115,33 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
     [scanMode, handleActionQrin, handleActionQrout]
   );
 
-  useEffect(() => {
-    if (qrScannerOpen) {
-      const scanner = new Html5QrcodeScanner("qr-scanner", {
+useEffect(() => {
+  if (qrScannerOpen) {
+    const scanner = new Html5QrcodeScanner(
+      "qr-scanner", 
+      {
         fps: 10,
         qrbox: { width: 250, height: 250 },
-      });
+      },
+      false // Pass `false` here to indicate we are not using `useWasm` mode
+    );
 
-      scanner.render(
-        (decodedText) => {
-          handleScan({ text: decodedText });
-        },
-        () => {
-          console.warn("QR Scan Error");
-        }
-      );
+    // Now we can use `render` for success and error handling
+    scanner.render(
+      (decodedText) => {
+        handleScan({ text: decodedText });
+      },
+      () => {
+        console.warn("QR Scan Error");
+      }
+    );
 
-      return () => {
-        scanner.clear().catch(() => {});
-      };
-    }
-  }, [qrScannerOpen, handleScan]);
+    return () => {
+      scanner.clear().catch(() => {});
+    };
+  }
+}, [qrScannerOpen, handleScan]); // Ensure handleScan is included in the dependencies.
+
 
   const handleAction = async (actionType: "checkin" | "checkout") => {
     try {
@@ -148,7 +154,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
           longitude: locationData.longitude,
         });
         toast.success("Berhasil Check-in");
-      } else if (actionType === "checkout") {
+      } else {
         await Out({
           latitude: locationData.latitude,
           longitude: locationData.longitude,
@@ -187,7 +193,7 @@ export const Actions = ({ checkIn, checkOut, leave, roleUser }: Props) => {
           >
             {loadOut ? "Memproses..." : "Pulang"}
           </Button>
-          <Button onPress={() => onOpen()} color="warning" {...defaultStyle}>
+          <Button onPress={onOpen} color="warning" {...defaultStyle}>
             Izin
           </Button>
         </div>
